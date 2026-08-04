@@ -1,6 +1,7 @@
 ---
 import Icon from './Icon.astro';
 import { useTranslations, contact, type Lang } from '../i18n/ui';
+import { privacyPath } from '../i18n/privacy';
 
 interface Props {
   lang: Lang;
@@ -9,12 +10,15 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 
 const year = new Date().getFullYear();
+const home = lang === 'vi' ? '/' : '/en/';
+
+// Kèm đường dẫn trang chủ để link neo còn dùng được trên các trang con.
 const links = [
-  { href: '#problems', label: t.nav.problems },
-  { href: '#services', label: t.nav.services },
-  { href: '#why', label: t.nav.why },
-  { href: '#process', label: t.nav.process },
-  { href: '#contact', label: t.nav.contact },
+  { href: `${home}#problems`, label: t.nav.problems },
+  { href: `${home}#services`, label: t.nav.services },
+  { href: `${home}#why`, label: t.nav.why },
+  { href: `${home}#process`, label: t.nav.process },
+  { href: `${home}#contact`, label: t.nav.contact },
 ];
 ---
 
@@ -88,6 +92,11 @@ const links = [
 
     <div class="ftr__bottom">
       <p class="ftr__copy">© {year} AVO AGENCY. {t.footer.rights}</p>
+
+      <nav class="ftr__legal" aria-label={t.footer.legalTitle}>
+        <a href={privacyPath[lang]}>{t.footer.privacy}</a>
+      </nav>
+
       <a class="ftr__top-link" href="#main">
         {t.footer.backToTop}
         <Icon name="arrow-up" size={15} />
@@ -201,6 +210,34 @@ const links = [
   .ftr__copy {
     font-size: var(--text-xs);
     color: var(--color-fg-subtle);
+  }
+
+  .ftr__legal {
+    /* Đẩy sang giữa trên màn hình rộng, tự xuống dòng khi hẹp */
+    margin-inline: auto;
+  }
+
+  .ftr__legal a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 2.75rem;
+    font-size: var(--text-xs);
+    color: var(--color-fg-subtle);
+    text-decoration: underline;
+    text-decoration-color: var(--color-border-strong);
+    text-underline-offset: 0.25em;
+    transition: color var(--dur-base) var(--ease-out);
+  }
+
+  .ftr__legal a:hover {
+    color: var(--color-accent);
+    text-decoration-color: currentColor;
+  }
+
+  @media (max-width: 34rem) {
+    .ftr__legal {
+      margin-inline: 0;
+    }
   }
 
   .ftr__top-link {

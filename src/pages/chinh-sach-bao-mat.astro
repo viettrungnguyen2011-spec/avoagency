@@ -1,0 +1,18 @@
+---
+// Chính sách quyền riêng tư — bản tiếng Việt (bản có giá trị pháp lý)
+import Base from '../layouts/Base.astro';
+import LegalDoc from '../components/LegalDoc.astro';
+import { privacy, privacyPath } from '../i18n/privacy';
+
+const lang = 'vi' as const;
+const doc = privacy[lang];
+---
+
+<Base
+  lang={lang}
+  paths={privacyPath}
+  title={`${doc.title} — AVO AGENCY`}
+  description="Chính sách về quyền riêng tư của CÔNG TY CỔ PHẦN TƯ VẤN, ĐẦU TƯ, THƯƠNG MẠI VÀ DỊCH VỤ QUỐC TẾ AVO: cách chúng tôi thu thập, sử dụng, bảo mật và chia sẻ thông tin cá nhân của bạn."
+>
+  <LegalDoc lang={lang} doc={doc} />
+</Base>

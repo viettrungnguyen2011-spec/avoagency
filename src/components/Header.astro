@@ -1,20 +1,26 @@
 ---
 import Icon from './Icon.astro';
-import { useTranslations, altHref, type Lang } from '../i18n/ui';
+import { useTranslations, type Lang } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
+  /** Đường dẫn của trang hiện tại ở ngôn ngữ còn lại. */
+  altPath: string;
 }
-const { lang } = Astro.props;
+const { lang, altPath } = Astro.props;
 const t = useTranslations(lang);
 
-const links = [
-  { href: '#problems', label: t.nav.problems },
-  { href: '#services', label: t.nav.services },
-  { href: '#why', label: t.nav.why },
-  { href: '#process', label: t.nav.process },
-];
 const home = lang === 'vi' ? '/' : '/en/';
+
+// Link neo phải kèm đường dẫn trang chủ, nếu không thì trên các trang con
+// (ví dụ chính sách bảo mật) bấm vào sẽ không đi đâu cả.
+const links = [
+  { href: `${home}#problems`, label: t.nav.problems },
+  { href: `${home}#services`, label: t.nav.services },
+  { href: `${home}#why`, label: t.nav.why },
+  { href: `${home}#process`, label: t.nav.process },
+];
+const contactHref = `${home}#contact`;
 ---
 
 <header class="hdr" data-header>
@@ -44,14 +50,14 @@ const home = lang === 'vi' ? '/' : '/en/';
     </nav>
 
     <div class="hdr__actions">
-      <a class="hdr__lang" href={altHref(lang)} hreflang={lang === 'vi' ? 'en' : 'vi'}>
+      <a class="hdr__lang" href={altPath} hreflang={lang === 'vi' ? 'en' : 'vi'}>
         <Icon name="globe" size={16} />
         <span class="sr-only">{t.langSwitch.label}: </span>
         <span aria-hidden="true">{t.langSwitch.code}</span>
         <span class="sr-only">{t.langSwitch.to}</span>
       </a>
 
-      <a class="btn btn--primary hdr__cta" href="#contact">{t.nav.cta}</a>
+      <a class="btn btn--primary hdr__cta" href={contactHref}>{t.nav.cta}</a>
 
       <button class="hdr__burger" type="button" aria-expanded="false" aria-controls="mobile-nav" data-burger>
         <Icon name="menu" size={22} class="i-open" />
@@ -76,13 +82,13 @@ const home = lang === 'vi' ? '/' : '/en/';
           ))
         }
         <li>
-          <a href="#contact" data-mobile-link>
+          <a href={contactHref} data-mobile-link>
             <span>{t.nav.contact}</span>
             <Icon name="arrow-right" size={18} />
           </a>
         </li>
       </ul>
-      <a class="btn btn--primary btn--lg hdr__mobile-cta" href="#contact" data-mobile-link>
+      <a class="btn btn--primary btn--lg hdr__mobile-cta" href={contactHref} data-mobile-link>
         {t.nav.cta}
       </a>
     </nav>
@@ -143,7 +149,9 @@ const home = lang === 'vi' ? '/' : '/en/';
 
   .hdr__nav a {
     position: relative;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 2.75rem;
     padding-block: var(--space-2xs);
     font-size: var(--text-sm);
     font-weight: 500;
@@ -155,7 +163,8 @@ const home = lang === 'vi' ? '/' : '/en/';
   .hdr__nav a::after {
     content: '';
     position: absolute;
-    inset-block-end: 0;
+    /* Gạch chân bám sát chữ chứ không rơi xuống đáy vùng chạm 44px */
+    inset-block-end: 0.55rem;
     inset-inline-start: 0;
     inline-size: 100%;
     block-size: 1px;

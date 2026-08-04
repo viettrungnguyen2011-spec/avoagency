@@ -1,0 +1,19 @@
+---
+// Privacy Policy — English courtesy translation.
+// The Vietnamese version at /chinh-sach-bao-mat/ is the legally binding text.
+import Base from '../../layouts/Base.astro';
+import LegalDoc from '../../components/LegalDoc.astro';
+import { privacy, privacyPath } from '../../i18n/privacy';
+
+const lang = 'en' as const;
+const doc = privacy[lang];
+---
+
+<Base
+  lang={lang}
+  paths={privacyPath}
+  title={`${doc.title} — AVO AGENCY`}
+  description="Privacy Policy of AVO International Consulting, Investment, Trade and Services JSC: how we collect, use, secure and share your personal information."
+>
+  <LegalDoc lang={lang} doc={doc} />
+</Base>

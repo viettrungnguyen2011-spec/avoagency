@@ -2,18 +2,34 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { useTranslations, altHref, type Lang } from '../i18n/ui';
+import { useTranslations, type Lang } from '../i18n/ui';
 
 interface Props {
   lang: Lang;
+  /** Đường dẫn của CHÍNH trang này ở mỗi ngôn ngữ.
+   *  Mặc định là trang chủ; trang con phải truyền vào để nút đổi ngôn ngữ
+   *  và thẻ hreflang trỏ đúng chỗ thay vì đá về trang chủ. */
+  paths?: { vi: string; en: string };
+  /** Ghi đè title/description khi trang con cần meta riêng. */
+  title?: string;
+  description?: string;
 }
 
-const { lang } = Astro.props;
+const {
+  lang,
+  paths = { vi: '/', en: '/en/' },
+  title,
+  description,
+} = Astro.props;
 const t = useTranslations(lang);
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
-const altUrl = new URL(altHref(lang), Astro.site).href;
 const ogImage = new URL('/brand/og-image.png', Astro.site).href;
+
+const pageTitle = title ?? t.meta.title;
+const pageDescription = description ?? t.meta.description;
+const viUrl = new URL(paths.vi, Astro.site).href;
+const enUrl = new URL(paths.en, Astro.site).href;
 
 // Chỉ nạp trước subset tiếng Việt khi trang thực sự là tiếng Việt.
 // Trang tiếng Anh nạp thêm sẽ lãng phí ~20 KB băng thông.
@@ -33,20 +49,20 @@ const preloadFonts = [
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- Không dùng maximum-scale/user-scalable=no: chặn zoom là vi phạm WCAG 1.4.4 -->
 
-    <title>{t.meta.title}</title>
-    <meta name="description" content={t.meta.description} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
     <link rel="canonical" href={canonical} />
 
     <!-- Cho Google biết hai bản ngôn ngữ là cùng một trang -->
-    <link rel="alternate" hreflang="vi" href={new URL('/', Astro.site).href} />
-    <link rel="alternate" hreflang="en" href={new URL('/en/', Astro.site).href} />
-    <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site).href} />
+    <link rel="alternate" hreflang="vi" href={viUrl} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="x-default" href={viUrl} />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="AVO AGENCY" />
     <meta property="og:locale" content={lang === 'vi' ? 'vi_VN' : 'en_US'} />
-    <meta property="og:title" content={t.meta.title} />
-    <meta property="og:description" content={t.meta.description} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
@@ -70,7 +86,7 @@ const preloadFonts = [
 
   <body>
     <a class="skip-link" href="#main">{t.nav.skip}</a>
-    <Header lang={lang} />
+    <Header lang={lang} altPath={lang === 'vi' ? paths.en : paths.vi} />
     <main id="main">
       <slot />
     </main>

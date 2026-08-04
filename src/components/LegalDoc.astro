@@ -1,0 +1,437 @@
+---
+import Icon from './Icon.astro';
+import { contact, type Lang } from '../i18n/ui';
+import type { PrivacyDoc } from '../i18n/privacy';
+
+interface Props {
+  lang: Lang;
+  doc: PrivacyDoc;
+}
+const { lang, doc } = Astro.props;
+
+const home = lang === 'vi' ? '/' : '/en/';
+
+// Định dạng ngày theo đúng thói quen đọc của từng ngôn ngữ
+const updatedLabel = new Intl.DateTimeFormat(lang === 'vi' ? 'vi-VN' : 'en-GB', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+}).format(new Date(doc.updated));
+
+const updatedPrefix = lang === 'vi' ? 'Cập nhật lần cuối' : 'Last updated';
+
+// Khối liên hệ cũng là một mục có đánh số, nên phải nằm trong mục lục —
+// nếu không thì trang có mục "14" mà mục lục chỉ đếm tới 13.
+const tocEntries = [
+  ...doc.sections.map((s) => ({ id: s.id, title: s.title })),
+  { id: 'lien-he', title: doc.contactTitle },
+];
+const contactIndex = doc.sections.length + 1;
+---
+
+<article class="legal">
+  <header class="legal__head">
+    <div class="shell shell--narrow">
+      <a class="legal__back" href={home}>
+        <Icon name="arrow-right" size={16} class="legal__back-icon" />
+        {doc.backLabel}
+      </a>
+
+      <h1 class="legal__title">{doc.title}</h1>
+
+      <p class="legal__meta">
+        <Icon name="shield" size={15} />
+        <span>{updatedPrefix}: <time datetime={doc.updated}>{updatedLabel}</time></span>
+      </p>
+
+      {
+        doc.translationNotice && (
+          <p class="legal__notice">
+            <Icon name="alert" size={16} />
+            <span>{doc.translationNotice}</span>
+          </p>
+        )
+      }
+    </div>
+  </header>
+
+  <div class="shell legal__body">
+    <!-- Mục lục: dính bên trái trên màn hình rộng, xếp trên nội dung khi hẹp -->
+    <nav class="legal__toc" aria-labelledby="toc-title">
+      <h2 class="legal__toc-title" id="toc-title">{doc.tocTitle}</h2>
+      <ol class="legal__toc-list">
+        {
+          tocEntries.map((s, i) => (
+            <li>
+              <a href={`#${s.id}`}>
+                <span class="legal__toc-num">{String(i + 1).padStart(2, '0')}</span>
+                <span>{s.title}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+
+    <div class="legal__content">
+      {doc.intro.map((b) => b.type === 'p' && <p class="legal__lede">{b.text}</p>)}
+
+      {
+        doc.sections.map((s, i) => (
+          <section class="legal__section" id={s.id}>
+            <h2 class="legal__h2">
+              <span class="legal__h2-num" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              {s.title}
+            </h2>
+            {s.blocks.map((b) =>
+              b.type === 'p' ? (
+                <p>{b.text}</p>
+              ) : (
+                <ul class="legal__list" role="list">
+                  {b.items.map((item) => (
+                    <li>
+                      <Icon name="check" size={15} />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              )
+            )}
+          </section>
+        ))
+      }
+
+      <section class="legal__section legal__contact" id="lien-he">
+        <h2 class="legal__h2">
+          <span class="legal__h2-num" aria-hidden="true">
+            {String(contactIndex).padStart(2, '0')}
+          </span>
+          {doc.contactTitle}
+        </h2>
+        <p>{doc.contactIntro}</p>
+        <ul class="legal__channels" role="list">
+          <li>
+            <Icon name="mail" size={17} />
+            <a href={`mailto:${contact.email}`}>{contact.email}</a>
+          </li>
+          <li>
+            <Icon name="phone" size={17} />
+            <a href={contact.hotlineHref}>{contact.hotline}</a>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</article>
+
+<style>
+  .legal {
+    padding-block-end: var(--section-y);
+  }
+
+  /* ---------- Đầu trang ---------- */
+  .legal__head {
+    position: relative;
+    padding-block: var(--space-2xl) var(--space-xl);
+    margin-block-end: var(--space-2xl);
+    border-block-end: 1px solid var(--color-border);
+    background:
+      var(--grad-halo),
+      var(--color-bg-sunken);
+  }
+
+  .legal__back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    min-block-size: 2.75rem;
+    margin-block-end: var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+    text-decoration: none;
+    transition: color var(--dur-base) var(--ease-out);
+  }
+
+  .legal__back:hover {
+    color: var(--color-accent);
+  }
+
+  .legal__back :global(.legal__back-icon) {
+    rotate: 180deg;
+  }
+
+  .legal__title {
+    font-size: var(--text-3xl);
+    /* Gradient vàng như tiêu đề hero, giữ mạch nhận diện */
+    background: var(--grad-gold);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    /* padding chống cắt cụt phần bụng chữ "g", "y" khi dùng background-clip */
+    padding-block-end: 0.08em;
+  }
+
+  @supports not (background-clip: text) {
+    .legal__title {
+      color: var(--color-accent);
+      -webkit-text-fill-color: currentColor;
+    }
+  }
+
+  .legal__meta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    margin-block-start: var(--space-sm);
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+
+  .legal__meta :global(svg) {
+    color: var(--color-accent);
+  }
+
+  .legal__notice {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: var(--space-2xs);
+    max-inline-size: 60ch;
+    margin-block-start: var(--space-md);
+    padding: var(--space-xs) var(--space-sm);
+    border: 1px solid var(--a-gold-32);
+    border-radius: var(--radius-md);
+    background: var(--a-gold-08);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    color: var(--gold-300);
+  }
+
+  .legal__notice :global(svg) {
+    margin-block-start: 0.25em;
+  }
+
+  /* ---------- Bố cục: mục lục + nội dung ---------- */
+  .legal__body {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  @media (min-width: 62rem) {
+    .legal__body {
+      grid-template-columns: minmax(0, 17rem) minmax(0, 1fr);
+      gap: var(--space-3xl);
+      align-items: start;
+    }
+    .legal__toc {
+      position: sticky;
+      inset-block-start: calc(var(--header-h) + var(--space-md));
+      /* Mục lục dài hơn màn hình thì tự cuộn riêng, không đẩy layout */
+      max-block-size: calc(100dvh - var(--header-h) - var(--space-xl));
+      overflow-y: auto;
+      padding-inline-end: var(--space-2xs);
+    }
+  }
+
+  .legal__toc-title {
+    margin-block-end: var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+  }
+
+  .legal__toc-list {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: none;
+  }
+
+  .legal__toc-list a {
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    align-items: start;
+    gap: var(--space-2xs);
+    min-block-size: 2.75rem;
+    padding-block: var(--space-3xs);
+    font-size: var(--text-sm);
+    line-height: var(--leading-snug);
+    color: var(--color-fg-muted);
+    text-decoration: none;
+    border-inline-start: 2px solid transparent;
+    padding-inline-start: var(--space-2xs);
+    transition:
+      color var(--dur-base) var(--ease-out),
+      border-color var(--dur-base) var(--ease-out);
+  }
+
+  .legal__toc-list a:hover,
+  .legal__toc-list a[data-current] {
+    color: var(--color-accent);
+    border-inline-start-color: var(--color-accent);
+  }
+
+  .legal__toc-num {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-fg-subtle);
+    padding-block-start: 0.15em;
+  }
+
+  /* ---------- Nội dung ---------- */
+  .legal__content {
+    max-inline-size: var(--measure);
+  }
+
+  .legal__lede {
+    font-size: var(--text-lg);
+    line-height: var(--leading-relaxed);
+    color: var(--color-fg-muted);
+  }
+
+  .legal__lede + .legal__lede {
+    margin-block-start: var(--space-sm);
+  }
+
+  .legal__section {
+    /* Chừa chỗ cho header dính khi nhảy tới mục qua link neo */
+    scroll-margin-block-start: calc(var(--header-h) + var(--space-md));
+    margin-block-start: var(--space-2xl);
+  }
+
+  .legal__h2 {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+    gap: var(--space-sm);
+    margin-block-end: var(--space-md);
+    padding-block-end: var(--space-sm);
+    border-block-end: 1px solid var(--color-border);
+    font-size: var(--text-xl);
+    font-weight: 800;
+    line-height: var(--leading-snug);
+  }
+
+  .legal__h2-num {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-accent);
+  }
+
+  .legal__section p {
+    line-height: var(--leading-relaxed);
+    color: var(--color-fg-muted);
+  }
+
+  .legal__section p + p,
+  .legal__section p + .legal__list,
+  .legal__section .legal__list + p {
+    margin-block-start: var(--space-sm);
+  }
+
+  .legal__list {
+    display: grid;
+    gap: var(--space-2xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .legal__list li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: var(--space-2xs);
+    line-height: var(--leading-normal);
+    color: var(--color-fg-muted);
+  }
+
+  .legal__list :global(svg) {
+    margin-block-start: 0.35em;
+    color: var(--color-accent);
+  }
+
+  /* ---------- Khối liên hệ cuối trang ---------- */
+  .legal__contact {
+    padding: var(--space-lg);
+    border: 1px solid var(--a-gold-32);
+    border-radius: var(--radius-lg);
+    background:
+      linear-gradient(160deg, var(--a-gold-08), transparent 60%),
+      var(--color-surface);
+  }
+
+  .legal__contact .legal__h2 {
+    border-block-end-color: var(--color-border);
+  }
+
+  .legal__channels {
+    display: grid;
+    gap: var(--space-2xs);
+    margin-block-start: var(--space-md);
+    padding: 0;
+    list-style: none;
+  }
+
+  .legal__channels li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: var(--space-2xs);
+  }
+
+  .legal__channels :global(svg) {
+    color: var(--color-accent);
+  }
+
+  .legal__channels a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 2.75rem;
+    font-weight: 600;
+    color: var(--color-fg);
+    text-decoration: none;
+    transition: color var(--dur-base) var(--ease-out);
+  }
+
+  .legal__channels a:hover {
+    color: var(--color-accent);
+  }
+</style>
+
+<script>
+  // Đánh dấu mục đang đọc trong mục lục.
+  // Hoàn toàn tuỳ chọn: không có JS thì mục lục vẫn là danh sách link chạy tốt.
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('.legal__toc-list a')];
+  const sections = links
+    .map((a) => document.querySelector(a.getAttribute('href') ?? ''))
+    .filter((el): el is Element => el !== null);
+
+  if (sections.length && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          links.forEach((a) => a.removeAttribute('data-current'));
+          const active = links.find((a) => a.getAttribute('href') === `#${entry.target.id}`);
+          active?.setAttribute('data-current', '');
+        }
+      },
+      // Dải hẹp gần đỉnh màn hình: mục nào chạm dải đó thì coi là đang đọc
+      { rootMargin: '-20% 0px -70% 0px' }
+    );
+    sections.forEach((s) => io.observe(s));
+  }
+</script>

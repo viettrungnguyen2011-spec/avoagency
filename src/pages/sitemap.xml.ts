@@ -6,22 +6,31 @@ export const GET: APIRoute = ({ site }) => {
   const base = site?.href.replace(/\/$/, '') ?? '';
   const today = new Date().toISOString().split('T')[0];
 
+  // Mỗi mục là một cặp trang vi/en của cùng một nội dung.
+  // Thêm trang mới thì thêm một dòng ở đây.
   const pages = [
-    { path: '/', priority: '1.0' },
-    { path: '/en/', priority: '0.9' },
+    { vi: '/', en: '/en/', priority: '1.0', changefreq: 'monthly' },
+    {
+      vi: '/chinh-sach-bao-mat/',
+      en: '/en/privacy-policy/',
+      priority: '0.3',
+      changefreq: 'yearly',
+    },
   ];
 
   const urls = pages
-    .map(
-      ({ path, priority }) => `  <url>
+    .flatMap(({ vi, en, priority, changefreq }) =>
+      [vi, en].map(
+        (path) => `  <url>
     <loc>${base}${path}</loc>
     <lastmod>${today}</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>${changefreq}</changefreq>
     <priority>${priority}</priority>
-    <xhtml:link rel="alternate" hreflang="vi" href="${base}/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="${base}/en/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="${base}/"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="${base}${vi}"/>
+    <xhtml:link rel="alternate" hreflang="en" href="${base}${en}"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="${base}${vi}"/>
   </url>`
+      )
     )
     .join('\n');
 

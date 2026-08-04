@@ -3,8 +3,10 @@
 Website song ngữ Việt–Anh cho AVO AGENCY, xây bằng **Astro** (Node.js), xuất ra
 file tĩnh để chạy trên **Hostinger shared hosting**.
 
-- Tiếng Việt: `/`
-- Tiếng Anh: `/en/`
+| Trang | Tiếng Việt | Tiếng Anh |
+| --- | --- | --- |
+| Trang chủ | `/` | `/en/` |
+| Chính sách quyền riêng tư | `/chinh-sach-bao-mat/` | `/en/privacy-policy/` |
 
 ---
 
@@ -81,6 +83,29 @@ export const contact = {
 
 Những chỗ đặt trong ngoặc vuông như `[Tên khách hàng]` là nội dung mẫu cần bạn
 thay bằng thông tin thật.
+
+### Chính sách quyền riêng tư
+
+Nội dung chính sách nằm riêng ở `src/i18n/privacy.ts` (dài nên tách ra cho đỡ
+rối). Cấu trúc mỗi mục:
+
+```ts
+{
+  id: 'ma-muc',        // dùng cho link neo #ma-muc, đừng đổi nếu đã chia sẻ link
+  title: 'Tên mục',
+  blocks: [
+    { type: 'p', text: 'Một đoạn văn.' },
+    { type: 'list', items: ['Gạch đầu dòng 1', 'Gạch đầu dòng 2'] },
+  ],
+}
+```
+
+Sửa nội dung xong nhớ đổi luôn `updated: '2026-08-04'` ở đầu mỗi bản ngôn ngữ —
+ngày này hiện trên trang.
+
+> **Bản tiếng Anh là bản dịch tham khảo.** Trang tiếng Anh có sẵn dòng ghi chú
+> nói rõ bản tiếng Việt mới là bản có giá trị pháp lý. Đừng xoá dòng đó trừ khi
+> bạn đã có bản tiếng Anh được luật sư duyệt.
 
 ---
 
@@ -273,12 +298,17 @@ avo-agency/
 │   │   ├── Audience.astro   # khách hàng + lời kết
 │   │   ├── ContactForm.astro
 │   │   ├── Footer.astro
+│   │   ├── LegalDoc.astro   # khung hiển thị văn bản pháp lý + mục lục
 │   │   └── Icon.astro       # bộ icon SVG dùng chung
-│   ├── i18n/ui.ts           # >>> TOÀN BỘ CHỮ NẰM Ở ĐÂY <<<
+│   ├── i18n/
+│   │   ├── ui.ts            # >>> TOÀN BỘ CHỮ TRANG CHỦ NẰM Ở ĐÂY <<<
+│   │   └── privacy.ts       # nội dung chính sách quyền riêng tư
 │   ├── layouts/Base.astro   # khung HTML, thẻ meta, SEO
 │   ├── pages/
-│   │   ├── index.astro      # trang chủ tiếng Việt (/)
-│   │   ├── en/index.astro   # trang chủ tiếng Anh (/en/)
+│   │   ├── index.astro                 # trang chủ tiếng Việt (/)
+│   │   ├── chinh-sach-bao-mat.astro    # chính sách, tiếng Việt
+│   │   ├── en/index.astro              # trang chủ tiếng Anh (/en/)
+│   │   ├── en/privacy-policy.astro     # chính sách, tiếng Anh
 │   │   ├── 404.astro
 │   │   ├── robots.txt.ts
 │   │   └── sitemap.xml.ts
