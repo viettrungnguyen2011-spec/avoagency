@@ -1,0 +1,25 @@
+---
+// English homepage — served at /en/
+import Base from '../../layouts/Base.astro';
+import Hero from '../../components/Hero.astro';
+import Marquee from '../../components/Marquee.astro';
+import Problems from '../../components/Problems.astro';
+import Services from '../../components/Services.astro';
+import Why from '../../components/Why.astro';
+import Audience from '../../components/Audience.astro';
+import Process from '../../components/Process.astro';
+import ContactForm from '../../components/ContactForm.astro';
+
+const lang = 'en' as const;
+---
+
+<Base lang={lang}>
+  <Hero lang={lang} />
+  <Marquee lang={lang} />
+  <Problems lang={lang} />
+  <Services lang={lang} />
+  <Why lang={lang} />
+  <Process lang={lang} />
+  <Audience lang={lang} />
+  <ContactForm lang={lang} />
+</Base>

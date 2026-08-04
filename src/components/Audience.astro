@@ -1,0 +1,165 @@
+---
+import Icon from './Icon.astro';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="section audience">
+  <div class="shell audience__inner">
+    <header class="audience__head">
+      <p class="eyebrow" data-reveal-target>{t.audience.eyebrow}</p>
+      <h2 data-reveal-target data-reveal-delay="60">{t.audience.title}</h2>
+    </header>
+
+    <ul class="audience__list" role="list">
+      {
+        t.audience.items.map((item) => (
+          <li class="acard" data-reveal-target>
+            <span class="acard__mark" aria-hidden="true">
+              <Icon name="arrow-right" size={16} />
+            </span>
+            <div>
+              <h3 class="acard__name">{item.name}</h3>
+              <p class="acard__desc">{item.desc}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<section class="section closing">
+  <div class="shell closing__inner">
+    <p class="eyebrow" data-reveal-target>{t.closing.eyebrow}</p>
+    <blockquote class="closing__quote" data-reveal-target data-reveal-delay="80">
+      <p>{t.closing.quote}</p>
+      <footer class="closing__attr">
+        <span class="closing__brand">{t.closing.attribution}</span>
+        <span class="closing__tag">Viral. Fast. Effective.</span>
+      </footer>
+    </blockquote>
+  </div>
+</section>
+
+<style>
+  /* ---------- Khách hàng ---------- */
+  .audience {
+    background: var(--color-bg);
+    padding-block-end: 0;
+  }
+
+  .audience__inner {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  @media (min-width: 51.3125rem) {
+    .audience__inner {
+      grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+      gap: var(--space-3xl);
+    }
+  }
+
+  .audience__head h2 {
+    margin-block-start: var(--space-sm);
+    font-size: var(--text-2xl);
+  }
+
+  .audience__list {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .acard {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: var(--space-md);
+    padding-block: var(--space-md);
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  .acard:last-child {
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  .acard__mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 1.75rem;
+    block-size: 1.75rem;
+    border-radius: var(--radius-full);
+    background: var(--a-gold-08);
+    color: var(--color-accent);
+    margin-block-start: 0.1rem;
+  }
+
+  .acard__name {
+    font-size: var(--text-base);
+    font-weight: 700;
+    letter-spacing: var(--tracking-snug);
+  }
+
+  .acard__desc {
+    margin-block-start: 0.15rem;
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+
+  /* ---------- Lời kết ---------- */
+  .closing {
+    background: var(--color-bg);
+  }
+
+  .closing__inner {
+    max-inline-size: 52rem;
+  }
+
+  .closing__quote {
+    margin: var(--space-md) 0 0;
+    padding-inline-start: var(--space-md);
+    border-inline-start: 2px solid var(--color-accent);
+  }
+
+  .closing__quote p {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    line-height: var(--leading-snug);
+    letter-spacing: var(--tracking-snug);
+    text-wrap: balance;
+    color: var(--color-fg);
+  }
+
+  .closing__attr {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2xs) var(--space-sm);
+    margin-block-start: var(--space-md);
+  }
+
+  .closing__brand {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-fg-muted);
+  }
+
+  .closing__tag {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+</style>

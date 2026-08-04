@@ -1,0 +1,20 @@
+{
+  "name": "avo-agency",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AVO AGENCY - TikTok creative agency website (bilingual VI/EN, static build for Hostinger)",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "engines": {
+    "node": ">=18.20.8"
+  },
+  "dependencies": {
+    "astro": "^5.6.1"
+  }
+}

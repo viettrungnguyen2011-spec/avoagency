@@ -1,0 +1,223 @@
+/* ==========================================================================
+   AVO AGENCY — DESIGN TOKENS
+   Kiến trúc 3 lớp: primitive -> semantic -> component.
+   Component không bao giờ dùng mã hex trực tiếp, luôn đi qua biến semantic.
+
+   Toàn bộ màu dưới đây trích trực tiếp từ file logo gốc
+   (LOGO CTY/KHÔNG VIỀN - KHÔNG SLOGAN.png) bằng cách đếm tần suất pixel.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   LỚP 1 — PRIMITIVE
+   -------------------------------------------------------------------------- */
+:root {
+  /* ---- MÀU THƯƠNG HIỆU GỐC (đo từ logo) ---- */
+  --brand-gold: #e0c080; /* vàng champagne — chữ "AV", màu chiếm nhiều nhất */
+  --brand-gold-deep: #c0a050; /* đáy gradient vàng */
+  --brand-blue: #0090e0; /* xanh vòng xoáy + nút play */
+  --brand-navy: #0040b0; /* cung navy bên phải chữ O */
+  --brand-cyan: #00c8f0; /* điểm sáng nhất vòng xoáy */
+
+  /* ---- Thang vàng ---- */
+  --gold-200: #f3e6c8;
+  --gold-300: #ecd8a8;
+  --gold-400: var(--brand-gold);
+  --gold-500: #d4b06a;
+  --gold-600: var(--brand-gold-deep);
+  --gold-700: #9a7f3c;
+
+  /* ---- Thang xanh ---- */
+  --blue-300: var(--brand-cyan);
+  --blue-400: #33a8e8;
+  --blue-500: var(--brand-blue);
+  --blue-600: #0068c8;
+  --blue-700: var(--brand-navy);
+  --blue-800: #002f80;
+
+  /* ---- Thang nền navy (dẫn xuất từ hue 218° của --brand-navy) ---- */
+  --navy-950: #05080f; /* nền sâu nhất */
+  --navy-900: #070c18; /* nền chính */
+  --navy-850: #0a1120;
+  --navy-800: #0d1526; /* mặt thẻ */
+  --navy-700: #121c31; /* thẻ nổi */
+  --navy-600: #1b2740;
+  --navy-500: #2a3a5c;
+  --navy-400: #45587f;
+  --navy-300: #7385a8;
+  --navy-200: #a8b4cb;
+  --navy-100: #d5dce8;
+
+  --paper-50: #ffffff;
+  --paper-100: #f7f8fb;
+  --paper-200: #eceef4;
+
+  /* ---- Màu chức năng ---- */
+  --positive-500: #2ecc8f;
+  --danger-500: #ff5a5f;
+
+  /* ---- Alpha ---- */
+  --a-gold-08: rgb(224 192 128 / 0.08);
+  --a-gold-16: rgb(224 192 128 / 0.16);
+  --a-gold-32: rgb(224 192 128 / 0.32);
+  --a-blue-12: rgb(0 144 224 / 0.12);
+  --a-blue-24: rgb(0 144 224 / 0.24);
+  --a-white-06: rgb(255 255 255 / 0.06);
+  --a-white-10: rgb(255 255 255 / 0.1);
+  --a-white-14: rgb(255 255 255 / 0.14);
+  --a-black-40: rgb(0 0 0 / 0.4);
+
+  /* ---- Gradient lấy từ logo ---- */
+  --grad-gold: linear-gradient(135deg, #f3e6c8 0%, #e0c080 42%, #c0a050 100%);
+  --grad-blue: linear-gradient(135deg, #00c8f0 0%, #0090e0 45%, #0040b0 100%);
+  /* Quầng sáng nền hero */
+  --grad-halo: radial-gradient(
+    60% 50% at 50% 0%,
+    rgb(0 144 224 / 0.22) 0%,
+    rgb(0 64 176 / 0.1) 40%,
+    transparent 72%
+  );
+}
+
+/* --------------------------------------------------------------------------
+   LỚP 2 — SEMANTIC
+   Tên nói lên VAI TRÒ, không nói màu gì. Component chỉ dùng lớp này.
+   -------------------------------------------------------------------------- */
+:root {
+  --color-bg: var(--navy-900);
+  --color-bg-sunken: var(--navy-950);
+  --color-surface: var(--navy-800);
+  --color-surface-raised: var(--navy-700);
+  --color-surface-hover: var(--navy-600);
+
+  --color-fg: #eef1f7;
+  --color-fg-muted: var(--navy-200);
+  --color-fg-subtle: var(--navy-300);
+
+  /* Vàng = màu nhấn chính: từ khoá trong tiêu đề, nút chính, nhãn eyebrow */
+  --color-accent: var(--gold-400);
+  --color-accent-hover: var(--gold-300);
+  --color-on-accent: var(--navy-950);
+
+  /* Xanh = màu dữ liệu: biểu đồ, chỉ số, icon nền tảng */
+  --color-data: var(--blue-500);
+  --color-data-bright: var(--blue-300);
+
+  --color-border: var(--a-white-10);
+  --color-border-strong: var(--a-white-14);
+  --color-focus: var(--gold-300);
+
+  --color-positive: var(--positive-500);
+  --color-danger: var(--danger-500);
+}
+
+/* Khối đảo màu: nền sáng, chữ tối. Đặt class .invert lên <section>. */
+.invert {
+  --color-bg: var(--paper-100);
+  --color-bg-sunken: var(--paper-200);
+  --color-surface: var(--paper-50);
+  --color-surface-raised: var(--paper-50);
+  --color-surface-hover: var(--paper-200);
+
+  --color-fg: var(--navy-900);
+  --color-fg-muted: #4a5468;
+  --color-fg-subtle: #6b7688;
+
+  /* Vàng #E0C080 trên nền sáng chỉ đạt ~1.7:1 — không đọc được.
+     Trên nền sáng phải hạ xuống gold-700 để qua ngưỡng 4.5:1. */
+  --color-accent: var(--gold-700);
+  --color-accent-hover: var(--gold-600);
+  --color-on-accent: var(--paper-50);
+
+  --color-data: var(--blue-600);
+
+  --color-border: rgb(7 12 24 / 0.12);
+  --color-border-strong: rgb(7 12 24 / 0.2);
+  --color-focus: var(--blue-600);
+}
+
+/* --------------------------------------------------------------------------
+   LỚP 3 — TYPOGRAPHY
+   Bricolage Grotesque + Inter + JetBrains Mono.
+   Cả ba đều có bộ dấu tiếng Việt đầy đủ (đã kiểm tra subset trước khi chọn).
+   -------------------------------------------------------------------------- */
+:root {
+  --font-display: 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Cascadia Code', ui-monospace, monospace;
+
+  --text-xs: clamp(0.75rem, 0.72rem + 0.12vw, 0.8125rem);
+  --text-sm: clamp(0.875rem, 0.85rem + 0.12vw, 0.9375rem);
+  --text-base: clamp(1rem, 0.96rem + 0.18vw, 1.0625rem);
+  --text-lg: clamp(1.125rem, 1.06rem + 0.3vw, 1.3125rem);
+  --text-xl: clamp(1.375rem, 1.24rem + 0.6vw, 1.75rem);
+  --text-2xl: clamp(1.75rem, 1.5rem + 1.1vw, 2.5rem);
+  --text-3xl: clamp(2.125rem, 1.7rem + 1.9vw, 3.5rem);
+  --text-4xl: clamp(2.5rem, 1.8rem + 3.1vw, 4.75rem);
+
+  --leading-tight: 1.02;
+  --leading-snug: 1.18;
+  --leading-normal: 1.6;
+  --leading-relaxed: 1.75;
+
+  --tracking-tight: -0.028em;
+  --tracking-snug: -0.014em;
+  --tracking-wide: 0.09em;
+  --tracking-widest: 0.18em;
+}
+
+/* --------------------------------------------------------------------------
+   LỚP 4 — SPACING / RADIUS / MOTION
+   -------------------------------------------------------------------------- */
+:root {
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+
+  --section-y: clamp(4rem, 3rem + 5.5vw, 8.5rem);
+  --gutter: clamp(1.25rem, 0.9rem + 1.6vw, 2.5rem);
+  --measure: 66ch;
+
+  --radius-xs: 3px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  --ratio-vertical: 9 / 16;
+
+  --dur-fast: 130ms;
+  --dur-base: 220ms;
+  --dur-slow: 380ms;
+  --dur-slower: 700ms;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.35);
+  --shadow-md: 0 10px 30px -12px rgb(0 0 0 / 0.6);
+  --shadow-lg: 0 28px 70px -20px rgb(0 0 0 / 0.75);
+  --shadow-gold: 0 14px 44px -14px var(--a-gold-32);
+
+  --z-base: 1;
+  --z-sticky: 50;
+  --z-header: 100;
+  --z-modal: 200;
+
+  --header-h: 4.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 1ms;
+    --dur-base: 1ms;
+    --dur-slow: 1ms;
+    --dur-slower: 1ms;
+  }
+}

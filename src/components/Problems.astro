@@ -1,0 +1,103 @@
+---
+import Icon from './Icon.astro';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="section problems" id="problems">
+  <div class="shell">
+    <header class="problems__head">
+      <p class="eyebrow" data-reveal-target>{t.problems.eyebrow}</p>
+      <h2 data-reveal-target data-reveal-delay="60">{t.problems.title}</h2>
+      <p class="lede" data-reveal-target data-reveal-delay="120">{t.problems.lede}</p>
+    </header>
+
+    <ul class="problems__grid" role="list">
+      {
+        t.problems.items.map((item) => (
+          <li class="pcard" data-reveal-target>
+            <span class="pcard__icon" aria-hidden="true">
+              <Icon name="alert" size={18} />
+            </span>
+            <h3 class="pcard__title">{item.title}</h3>
+            <p class="pcard__desc">{item.desc}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .problems {
+    background: var(--color-bg);
+  }
+
+  .problems__head {
+    max-inline-size: 46rem;
+    margin-block-end: var(--space-2xl);
+  }
+
+  .problems__head h2 {
+    margin-block: var(--space-sm) var(--space-md);
+  }
+
+  .problems__grid {
+    display: grid;
+    /* auto-fit + minmax: tự đổi số cột theo bề rộng, không cần media query */
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+    gap: var(--space-sm);
+    margin: 0;
+    padding: 0;
+  }
+
+  .pcard {
+    position: relative;
+    padding: var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    transition:
+      border-color var(--dur-base) var(--ease-out),
+      background-color var(--dur-base) var(--ease-out),
+      transform var(--dur-base) var(--ease-out);
+  }
+
+  .pcard:hover {
+    border-color: var(--a-gold-32);
+    background: var(--color-surface-raised);
+    transform: translateY(-2px);
+  }
+
+  .pcard__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 2.25rem;
+    block-size: 2.25rem;
+    margin-block-end: var(--space-sm);
+    border-radius: var(--radius-md);
+    background: rgb(255 90 95 / 0.12);
+    color: var(--color-danger);
+  }
+
+  .pcard__title {
+    margin-block-end: var(--space-2xs);
+    font-size: var(--text-base);
+    font-weight: 700;
+    line-height: var(--leading-snug);
+    letter-spacing: var(--tracking-snug);
+    color: var(--color-fg);
+  }
+
+  .pcard__desc {
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    color: var(--color-fg-muted);
+  }
+</style>

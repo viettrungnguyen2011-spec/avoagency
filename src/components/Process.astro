@@ -1,0 +1,161 @@
+---
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="section process" id="process">
+  <div class="shell">
+    <header class="process__head">
+      <p class="eyebrow" data-reveal-target>{t.process.eyebrow}</p>
+      <h2 data-reveal-target data-reveal-delay="60">{t.process.title}</h2>
+      <p class="lede" data-reveal-target data-reveal-delay="120">{t.process.lede}</p>
+    </header>
+
+    <!-- Danh sách CÓ THỨ TỰ vì đây thật sự là một chuỗi tuần tự:
+         bước 5 không thể xảy ra trước bước 1. -->
+    <ol class="process__list">
+      {
+        t.process.steps.map((step) => (
+          <li
+            class:list={['step', { 'step--hl': 'highlight' in step && step.highlight }]}
+            data-reveal-target
+          >
+            <div class="step__marker">
+              <span class="step__num">{step.num}</span>
+            </div>
+            <div class="step__body">
+              <h3 class="step__name">{step.name}</h3>
+              <p class="step__desc">{step.desc}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .process {
+    background: var(--color-bg-sunken);
+  }
+
+  .process__head {
+    max-inline-size: 46rem;
+    margin-block-end: var(--space-2xl);
+  }
+
+  .process__head h2 {
+    margin-block: var(--space-sm) var(--space-md);
+  }
+
+  .process__list {
+    display: grid;
+    gap: var(--space-lg);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: none;
+  }
+
+  .step {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-md);
+  }
+
+  .step__marker {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    flex: none;
+  }
+
+  .step__num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 3rem;
+    block-size: 3rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-full);
+    background: var(--color-surface);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-fg-muted);
+    z-index: var(--z-base);
+  }
+
+  .step--hl .step__num {
+    border-color: var(--color-accent);
+    background: var(--a-gold-16);
+    color: var(--color-accent);
+  }
+
+  .step__name {
+    margin-block: 0.55rem var(--space-3xs);
+    font-size: var(--text-lg);
+    font-weight: 800;
+  }
+
+  .step--hl .step__name {
+    color: var(--color-accent);
+  }
+
+  .step__desc {
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    color: var(--color-fg-muted);
+    max-inline-size: 44ch;
+  }
+
+  /* ---- Mobile: đường nối dọc chạy qua các số ---- */
+  @media (max-width: 51.25rem) {
+    .step:not(:last-child) .step__marker::after {
+      content: '';
+      position: absolute;
+      inset-block-start: 3rem;
+      inset-block-end: calc(-1 * var(--space-lg));
+      inline-size: 1px;
+      background: var(--color-border);
+    }
+  }
+
+  /* ---- Desktop: 5 cột, đường nối ngang ---- */
+  @media (min-width: 51.3125rem) {
+    .process__list {
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--space-md);
+    }
+
+    .step {
+      grid-template-columns: 1fr;
+      gap: var(--space-sm);
+    }
+
+    .step__marker {
+      justify-content: flex-start;
+    }
+
+    .step:not(:last-child) .step__marker::after {
+      content: '';
+      position: absolute;
+      inset-block-start: 50%;
+      inset-inline-start: 3rem;
+      /* Kéo dài qua khoảng gap để nối sang cột kế tiếp */
+      inline-size: calc(100% - 3rem + var(--space-md));
+      block-size: 1px;
+      background: var(--color-border);
+    }
+
+    .step__desc {
+      max-inline-size: none;
+    }
+  }
+</style>

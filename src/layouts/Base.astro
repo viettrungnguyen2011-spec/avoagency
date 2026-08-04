@@ -1,0 +1,122 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { useTranslations, altHref, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const altUrl = new URL(altHref(lang), Astro.site).href;
+const ogImage = new URL('/brand/og-image.png', Astro.site).href;
+
+// Chỉ nạp trước subset tiếng Việt khi trang thực sự là tiếng Việt.
+// Trang tiếng Anh nạp thêm sẽ lãng phí ~20 KB băng thông.
+const preloadFonts = [
+  '/fonts/bricolage-grotesque-800-latin.woff2',
+  '/fonts/inter-400-latin.woff2',
+  ...(lang === 'vi'
+    ? ['/fonts/bricolage-grotesque-800-vietnamese.woff2', '/fonts/inter-400-vietnamese.woff2']
+    : []),
+];
+---
+
+<!doctype html>
+<html lang={lang} dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Không dùng maximum-scale/user-scalable=no: chặn zoom là vi phạm WCAG 1.4.4 -->
+
+    <title>{t.meta.title}</title>
+    <meta name="description" content={t.meta.description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Cho Google biết hai bản ngôn ngữ là cùng một trang -->
+    <link rel="alternate" hreflang="vi" href={new URL('/', Astro.site).href} />
+    <link rel="alternate" hreflang="en" href={new URL('/en/', Astro.site).href} />
+    <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site).href} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="AVO AGENCY" />
+    <meta property="og:locale" content={lang === 'vi' ? 'vi_VN' : 'en_US'} />
+    <meta property="og:title" content={t.meta.title} />
+    <meta property="og:description" content={t.meta.description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={t.meta.ogAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <meta name="theme-color" content="#070c18" />
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/brand/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/brand/apple-touch-icon.png" />
+
+    {
+      preloadFonts.map((href) => (
+        <link rel="preload" href={href} as="font" type="font/woff2" crossorigin="anonymous" />
+      ))
+    }
+
+    <link rel="sitemap" href="/sitemap.xml" />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">{t.nav.skip}</a>
+    <Header lang={lang} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+
+    <script>
+      // ---- Hiện dần khi cuộn tới ----
+      // Chỉ chạy khi người dùng KHÔNG bật "giảm chuyển động".
+      // Phần tử được gắn data-reveal bằng JS, nên khi JS lỗi thì nội dung
+      // vẫn hiện đầy đủ thay vì bị ẩn vĩnh viễn.
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const targets = document.querySelectorAll<HTMLElement>('[data-reveal-target]');
+
+      if (!reduced && 'IntersectionObserver' in window) {
+        targets.forEach((el, i) => {
+          el.dataset.reveal = '';
+          // So le nhẹ trong cùng một nhóm để mắt đọc theo thứ tự
+          const delay = Number(el.dataset.revealDelay ?? (i % 4) * 70);
+          el.style.setProperty('--reveal-delay', `${delay}ms`);
+        });
+
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              (entry.target as HTMLElement).dataset.reveal = 'shown';
+              io.unobserve(entry.target);
+            }
+          },
+          { rootMargin: '0px 0px -12% 0px', threshold: 0.08 }
+        );
+
+        targets.forEach((el) => io.observe(el));
+      }
+
+      // ---- Header đổi nền khi rời khỏi đỉnh trang ----
+      const header = document.querySelector<HTMLElement>('[data-header]');
+      if (header) {
+        const sentinel = document.createElement('div');
+        sentinel.setAttribute('aria-hidden', 'true');
+        sentinel.style.cssText = 'position:absolute;top:0;height:1px;width:1px;';
+        document.body.prepend(sentinel);
+        new IntersectionObserver(
+          ([e]) => header.toggleAttribute('data-stuck', !e.isIntersecting)
+        ).observe(sentinel);
+      }
+    </script>
+  </body>
+</html>

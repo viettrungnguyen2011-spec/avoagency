@@ -1,0 +1,278 @@
+---
+import Icon from './Icon.astro';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<section class="hero">
+  <!-- Nền: quầng sáng + lưới mảnh + vòng xoáy lấy từ chữ "O" trong logo.
+       Toàn bộ là aria-hidden vì thuần trang trí. -->
+  <div class="hero__bg" aria-hidden="true">
+    <div class="hero__halo"></div>
+    <div class="hero__grid"></div>
+    <svg class="hero__orbit" viewBox="0 0 400 400" fill="none">
+      <defs>
+        <linearGradient id="orbA" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#00c8f0" />
+          <stop offset="50%" stop-color="#0090e0" />
+          <stop offset="100%" stop-color="#0040b0" />
+        </linearGradient>
+        <linearGradient id="orbB" x1="1" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#e0c080" />
+          <stop offset="100%" stop-color="#c0a050" />
+        </linearGradient>
+      </defs>
+      <!-- Ba cung tròn lệch pha, mô phỏng vòng xoáy trong logo -->
+      <circle
+        class="orbit-ring orbit-ring--1"
+        cx="200"
+        cy="200"
+        r="168"
+        stroke="url(#orbA)"
+        stroke-width="1.5"
+        stroke-dasharray="240 820"
+        stroke-linecap="round"
+      />
+      <circle
+        class="orbit-ring orbit-ring--2"
+        cx="200"
+        cy="200"
+        r="132"
+        stroke="url(#orbB)"
+        stroke-width="1.2"
+        stroke-dasharray="150 680"
+        stroke-linecap="round"
+      />
+      <circle
+        class="orbit-ring orbit-ring--3"
+        cx="200"
+        cy="200"
+        r="96"
+        stroke="url(#orbA)"
+        stroke-width="1"
+        stroke-dasharray="90 510"
+        stroke-linecap="round"
+      />
+      <circle cx="200" cy="200" r="168" stroke="rgb(255 255 255 / 0.04)" stroke-width="1" />
+      <circle cx="200" cy="200" r="132" stroke="rgb(255 255 255 / 0.04)" stroke-width="1" />
+      <circle cx="200" cy="200" r="96" stroke="rgb(255 255 255 / 0.04)" stroke-width="1" />
+    </svg>
+  </div>
+
+  <div class="shell hero__inner">
+    <p class="hero__badge" data-reveal-target data-reveal-delay="0">
+      <Icon name="shield" size={15} />
+      <span>{t.hero.badge}</span>
+    </p>
+
+    <h1 class="hero__title" data-reveal-target data-reveal-delay="80">
+      <span class="hero__title-lead">{t.hero.titleLead}</span>
+      <span class="hero__title-accent">{t.hero.titleAccent}</span>
+    </h1>
+
+    <p class="hero__lede lede" data-reveal-target data-reveal-delay="160">{t.hero.lede}</p>
+
+    <div class="hero__cta" data-reveal-target data-reveal-delay="240">
+      <a class="btn btn--primary btn--lg" href="#contact">
+        {t.hero.ctaPrimary}
+        <Icon name="arrow-right" size={18} />
+      </a>
+      <a class="btn btn--ghost btn--lg" href="#services">{t.hero.ctaSecondary}</a>
+    </div>
+
+    <ul class="hero__trust" role="list" data-reveal-target data-reveal-delay="320">
+      {
+        t.hero.trust.map((item) => (
+          <li>
+            <Icon name="check" size={15} />
+            <span>{item}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    /* Trừ chiều cao header để khối chữ nằm cân giữa phần nhìn thấy */
+    padding-block: clamp(3.5rem, 2rem + 8vw, 8rem) clamp(3rem, 2rem + 5vw, 6rem);
+  }
+
+  /* ---- Nền trang trí ---- */
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .hero__halo {
+    position: absolute;
+    inset-block-start: -30%;
+    inset-inline: -10%;
+    block-size: 130%;
+    background: var(--grad-halo);
+  }
+
+  .hero__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, var(--a-white-06) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--a-white-06) 1px, transparent 1px);
+    background-size: 72px 72px;
+    /* Mờ dần ra rìa để lưới không cắt ngang màn hình một cách thô */
+    mask-image: radial-gradient(62% 58% at 50% 32%, #000 0%, transparent 100%);
+    opacity: 0.5;
+  }
+
+  .hero__orbit {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    inline-size: min(150vmin, 62rem);
+    block-size: auto;
+    translate: -50% -52%;
+    opacity: 0.55;
+  }
+
+  .orbit-ring {
+    transform-origin: 200px 200px;
+    animation: orbit-spin linear infinite;
+  }
+  .orbit-ring--1 {
+    animation-duration: 34s;
+  }
+  .orbit-ring--2 {
+    animation-duration: 26s;
+    animation-direction: reverse;
+  }
+  .orbit-ring--3 {
+    animation-duration: 19s;
+  }
+
+  @keyframes orbit-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Người dùng tắt hiệu ứng -> dừng hẳn vòng xoay, giữ nguyên hình tĩnh */
+  @media (prefers-reduced-motion: reduce) {
+    .orbit-ring {
+      animation: none;
+    }
+  }
+
+  /* ---- Nội dung ---- */
+  .hero__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    margin-block-end: var(--space-lg);
+    padding: var(--space-3xs) var(--space-sm) var(--space-3xs) var(--space-xs);
+    border: 1px solid var(--a-gold-32);
+    border-radius: var(--radius-full);
+    background: var(--a-gold-08);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: var(--gold-300);
+    line-height: 1.4;
+    text-align: start;
+  }
+
+  .hero__badge :global(svg) {
+    flex: none;
+    color: var(--color-accent);
+  }
+
+  .hero__title {
+    max-inline-size: 18ch;
+    margin-block-end: var(--space-md);
+    font-size: var(--text-4xl);
+    font-weight: 800;
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .hero__title-lead {
+    display: block;
+    color: var(--color-fg);
+  }
+
+  /* Từ khoá đổi màu — dùng chính gradient vàng của logo */
+  .hero__title-accent {
+    display: block;
+    background: var(--grad-gold);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    /* Dự phòng: nếu trình duyệt không hỗ trợ background-clip thì vẫn ra vàng đặc */
+    -webkit-text-fill-color: transparent;
+  }
+
+  @supports not (background-clip: text) {
+    .hero__title-accent {
+      color: var(--color-accent);
+      -webkit-text-fill-color: currentColor;
+    }
+  }
+
+  .hero__lede {
+    margin-block-end: var(--space-xl);
+    text-wrap: pretty;
+  }
+
+  .hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-xs);
+    margin-block-end: var(--space-2xl);
+  }
+
+  .hero__trust {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-xs) var(--space-lg);
+    margin: 0;
+    padding: 0;
+  }
+
+  .hero__trust li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    font-size: var(--text-sm);
+    color: var(--color-fg-subtle);
+  }
+
+  .hero__trust :global(svg) {
+    flex: none;
+    color: var(--color-positive);
+  }
+
+  @media (max-width: 30rem) {
+    .hero__cta .btn {
+      inline-size: 100%;
+    }
+  }
+</style>

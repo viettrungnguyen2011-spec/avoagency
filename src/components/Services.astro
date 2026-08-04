@@ -1,0 +1,180 @@
+---
+import Icon from './Icon.astro';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+// Icon theo thứ tự 5 dịch vụ trong ui.ts
+const icons = ['chart', 'lock', 'shield', 'spark', 'wallet'] as const;
+---
+
+<section class="section services" id="services">
+  <div class="shell">
+    <header class="services__head">
+      <p class="eyebrow" data-reveal-target>{t.services.eyebrow}</p>
+      <h2 data-reveal-target data-reveal-delay="60">{t.services.title}</h2>
+      <p class="lede" data-reveal-target data-reveal-delay="120">{t.services.lede}</p>
+    </header>
+
+    <ul class="services__grid" role="list">
+      {
+        t.services.items.map((item, i) => (
+          <li class:list={['scard', { 'scard--feature': i === 1 }]} data-reveal-target>
+            <div class="scard__top">
+              <span class="scard__icon" aria-hidden="true">
+                <Icon name={icons[i]} size={20} />
+              </span>
+              <span class="scard__num" aria-hidden="true">
+                {item.num}
+              </span>
+            </div>
+
+            <h3 class="scard__name">{item.name}</h3>
+            <p class="scard__desc">{item.desc}</p>
+
+            <ul class="scard__points" role="list">
+              {item.points.map((p) => (
+                <li>
+                  <Icon name="check" size={15} />
+                  <span>{p}</span>
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .services {
+    background: var(--color-bg-sunken);
+  }
+
+  .services__head {
+    max-inline-size: 46rem;
+    margin-block-end: var(--space-2xl);
+  }
+
+  .services__head h2 {
+    margin-block: var(--space-sm) var(--space-md);
+  }
+
+  .services__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 21rem), 1fr));
+    gap: var(--space-sm);
+    margin: 0;
+    padding: 0;
+  }
+
+  .scard {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-lg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    transition:
+      border-color var(--dur-base) var(--ease-out),
+      transform var(--dur-base) var(--ease-out);
+  }
+
+  .scard:hover {
+    border-color: var(--color-border-strong);
+    transform: translateY(-3px);
+  }
+
+  /* Dịch vụ 02 (gỡ shop) là điểm khác biệt lớn nhất — cho nó nổi hơn */
+  .scard--feature {
+    border-color: var(--a-gold-32);
+    background:
+      linear-gradient(180deg, var(--a-gold-08), transparent 55%),
+      var(--color-surface-raised);
+  }
+
+  .scard--feature:hover {
+    border-color: var(--color-accent);
+  }
+
+  .scard__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    margin-block-end: var(--space-md);
+  }
+
+  .scard__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--a-blue-12);
+    color: var(--color-data-bright);
+  }
+
+  .scard--feature .scard__icon {
+    background: var(--a-gold-16);
+    border-color: var(--a-gold-32);
+    color: var(--color-accent);
+  }
+
+  .scard__num {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-fg-subtle);
+  }
+
+  .scard__name {
+    margin-block-end: var(--space-2xs);
+    font-size: var(--text-xl);
+    font-weight: 800;
+  }
+
+  .scard__desc {
+    margin-block-end: var(--space-md);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    color: var(--color-fg-muted);
+  }
+
+  .scard__points {
+    display: grid;
+    gap: var(--space-2xs);
+    margin: auto 0 0;
+    padding-block-start: var(--space-md);
+    border-block-start: 1px solid var(--color-border);
+    list-style: none;
+  }
+
+  .scard__points li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: var(--space-2xs);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    color: var(--color-fg-muted);
+  }
+
+  .scard__points :global(svg) {
+    /* Căn icon theo dòng chữ đầu tiên thay vì giữa khối */
+    margin-block-start: 0.28em;
+    color: var(--color-positive);
+  }
+
+  .scard--feature .scard__points :global(svg) {
+    color: var(--color-accent);
+  }
+</style>

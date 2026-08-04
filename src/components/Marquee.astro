@@ -1,0 +1,88 @@
+---
+import { useTranslations, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+// Nhân đôi danh sách để vòng lặp nối liền, không thấy điểm nối
+const items = [...t.marquee, ...t.marquee];
+---
+
+<div class="marquee" role="presentation">
+  <div class="marquee__track">
+    {
+      items.map((word) => (
+        <span class="marquee__item">
+          <span class="marquee__dot" />
+          {word}
+        </span>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .marquee {
+    /* Không đọc bởi trình đọc màn hình: đây là dải trang trí,
+       mọi từ khoá trong đó đều đã xuất hiện ở phần nội dung thật. */
+    overflow: hidden;
+    padding-block: var(--space-sm);
+    border-block: 1px solid var(--color-border);
+    background: var(--color-bg-sunken);
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  .marquee__track {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    inline-size: max-content;
+    animation: marquee-scroll 42s linear infinite;
+  }
+
+  .marquee:hover .marquee__track {
+    animation-play-state: paused;
+  }
+
+  .marquee__item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-md);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+    white-space: nowrap;
+  }
+
+  .marquee__dot {
+    inline-size: 4px;
+    block-size: 4px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    flex: none;
+  }
+
+  @keyframes marquee-scroll {
+    to {
+      /* -50% = đúng một bản sao của danh sách gốc */
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee__track {
+      animation: none;
+      /* Không cuộn nữa thì cho phép người dùng tự kéo ngang */
+      overflow-x: auto;
+    }
+    .marquee {
+      overflow-x: auto;
+    }
+  }
+</style>

@@ -1,0 +1,221 @@
+---
+import Icon from './Icon.astro';
+import { useTranslations, contact, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const year = new Date().getFullYear();
+const links = [
+  { href: '#problems', label: t.nav.problems },
+  { href: '#services', label: t.nav.services },
+  { href: '#why', label: t.nav.why },
+  { href: '#process', label: t.nav.process },
+  { href: '#contact', label: t.nav.contact },
+];
+---
+
+<footer class="ftr">
+  <div class="shell">
+    <div class="ftr__top">
+      <div class="ftr__brand">
+        <img
+          src="/brand/avo-logo.png"
+          srcset="/brand/avo-logo.png 1x, /brand/avo-logo@2x.png 2x"
+          width="142"
+          height="56"
+          alt="AVO AGENCY"
+          loading="lazy"
+          decoding="async"
+        />
+        <p class="ftr__tag">{t.footer.tagline}</p>
+        <p class="ftr__blurb">{t.footer.blurb}</p>
+      </div>
+
+      <nav class="ftr__col" aria-label={t.footer.navTitle}>
+        <h2 class="ftr__h">{t.footer.navTitle}</h2>
+        <ul role="list">
+          {
+            links.map((l) => (
+              <li>
+                <a href={l.href}>{l.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div class="ftr__col">
+        <h2 class="ftr__h">{t.footer.contactTitle}</h2>
+        <ul role="list">
+          <li>
+            <a href={contact.hotlineHref}>
+              <Icon name="phone" size={15} />{contact.hotline}
+            </a>
+          </li>
+          <li>
+            <a href={`mailto:${contact.email}`}>
+              <Icon name="mail" size={15} />{contact.email}
+            </a>
+          </li>
+          <li>
+            <a href={contact.zaloHref} target="_blank" rel="noopener noreferrer">
+              <Icon name="chat" size={15} />Zalo: {contact.zaloName}
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="ftr__col">
+        <h2 class="ftr__h">{t.footer.followTitle}</h2>
+        <ul role="list">
+          <li>
+            <a href={contact.tiktokHref} target="_blank" rel="noopener noreferrer">
+              <Icon name="play" size={15} />TikTok {contact.tiktok}
+            </a>
+          </li>
+          <li>
+            <a href={contact.facebookHref} target="_blank" rel="noopener noreferrer">
+              <Icon name="link" size={15} />Facebook
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ftr__bottom">
+      <p class="ftr__copy">© {year} AVO AGENCY. {t.footer.rights}</p>
+      <a class="ftr__top-link" href="#main">
+        {t.footer.backToTop}
+        <Icon name="arrow-up" size={15} />
+      </a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ftr {
+    padding-block: var(--space-2xl) var(--space-lg);
+    border-block-start: 1px solid var(--color-border);
+    background: var(--color-bg-sunken);
+  }
+
+  .ftr__top {
+    display: grid;
+    gap: var(--space-xl);
+    padding-block-end: var(--space-xl);
+  }
+
+  @media (min-width: 45rem) {
+    .ftr__top {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .ftr__brand {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 62rem) {
+    .ftr__top {
+      grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
+      gap: var(--space-2xl);
+    }
+    .ftr__brand {
+      grid-column: auto;
+    }
+  }
+
+  .ftr__brand img {
+    block-size: 2.5rem;
+    inline-size: auto;
+    margin-block-end: var(--space-md);
+  }
+
+  .ftr__tag {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-block-end: var(--space-2xs);
+  }
+
+  .ftr__blurb {
+    max-inline-size: 40ch;
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    color: var(--color-fg-muted);
+  }
+
+  .ftr__h {
+    margin-block-end: var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+  }
+
+  .ftr__col ul {
+    display: grid;
+    gap: var(--space-3xs);
+    margin: 0;
+    padding: 0;
+  }
+
+  .ftr__col a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    /* 44px: vùng chạm tối thiểu, đủ lớn trên mobile mà không phải phình chữ */
+    min-block-size: 2.75rem;
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+    text-decoration: none;
+    transition: color var(--dur-base) var(--ease-out);
+  }
+
+  .ftr__col a:hover {
+    color: var(--color-accent);
+  }
+
+  .ftr__col :global(svg) {
+    flex: none;
+    opacity: 0.7;
+  }
+
+  .ftr__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    padding-block-start: var(--space-md);
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  .ftr__copy {
+    font-size: var(--text-xs);
+    color: var(--color-fg-subtle);
+  }
+
+  .ftr__top-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    min-block-size: 2.75rem;
+    font-size: var(--text-xs);
+    font-family: var(--font-mono);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-fg-subtle);
+    text-decoration: none;
+  }
+
+  .ftr__top-link:hover {
+    color: var(--color-accent);
+  }
+</style>

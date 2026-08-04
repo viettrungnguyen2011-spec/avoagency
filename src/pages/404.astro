@@ -1,0 +1,59 @@
+---
+// Trang 404 dùng chung cho cả hai ngôn ngữ (Apache chỉ nhận được MỘT
+// ErrorDocument), nên nội dung ở đây song ngữ luôn.
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<Base lang="vi">
+  <section class="nf">
+    <div class="shell nf__inner">
+      <p class="nf__code">404</p>
+      <h1 class="nf__title">Không tìm thấy trang này</h1>
+      <p class="nf__sub" lang="en">This page could not be found.</p>
+
+      <div class="nf__cta">
+        <a class="btn btn--primary btn--lg" href="/">
+          Về trang chủ
+          <Icon name="arrow-right" size={18} />
+        </a>
+        <a class="btn btn--ghost btn--lg" href="/en/" hreflang="en" lang="en">Go to English site</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    display: grid;
+    place-items: center;
+    /* Trừ header + footer để khối chữ nằm giữa phần còn lại của màn hình */
+    min-block-size: calc(100dvh - var(--header-h) - 18rem);
+    padding-block: var(--space-3xl);
+    text-align: center;
+  }
+
+  .nf__code {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-widest);
+    color: var(--color-accent);
+    margin-block-end: var(--space-sm);
+  }
+
+  .nf__title {
+    font-size: var(--text-3xl);
+  }
+
+  .nf__sub {
+    margin-block: var(--space-2xs) var(--space-xl);
+    color: var(--color-fg-muted);
+  }
+
+  .nf__cta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-xs);
+  }
+</style>

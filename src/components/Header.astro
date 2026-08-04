@@ -1,0 +1,331 @@
+---
+import Icon from './Icon.astro';
+import { useTranslations, altHref, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const links = [
+  { href: '#problems', label: t.nav.problems },
+  { href: '#services', label: t.nav.services },
+  { href: '#why', label: t.nav.why },
+  { href: '#process', label: t.nav.process },
+];
+const home = lang === 'vi' ? '/' : '/en/';
+---
+
+<header class="hdr" data-header>
+  <div class="hdr__inner shell">
+    <a class="hdr__brand" href={home} aria-label="AVO AGENCY">
+      <img
+        src="/brand/avo-logo.png"
+        srcset="/brand/avo-logo.png 1x, /brand/avo-logo@2x.png 2x, /brand/avo-logo@4x.png 4x"
+        width="142"
+        height="56"
+        alt="AVO AGENCY"
+        decoding="async"
+        fetchpriority="high"
+      />
+    </a>
+
+    <nav class="hdr__nav" aria-label={lang === 'vi' ? 'Điều hướng chính' : 'Main navigation'}>
+      <ul role="list">
+        {
+          links.map((l) => (
+            <li>
+              <a href={l.href}>{l.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="hdr__actions">
+      <a class="hdr__lang" href={altHref(lang)} hreflang={lang === 'vi' ? 'en' : 'vi'}>
+        <Icon name="globe" size={16} />
+        <span class="sr-only">{t.langSwitch.label}: </span>
+        <span aria-hidden="true">{t.langSwitch.code}</span>
+        <span class="sr-only">{t.langSwitch.to}</span>
+      </a>
+
+      <a class="btn btn--primary hdr__cta" href="#contact">{t.nav.cta}</a>
+
+      <button class="hdr__burger" type="button" aria-expanded="false" aria-controls="mobile-nav" data-burger>
+        <Icon name="menu" size={22} class="i-open" />
+        <Icon name="close" size={22} class="i-close" />
+        <span class="sr-only" data-burger-label>{t.nav.menuOpen}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Menu mobile: nằm ngoài .hdr__inner để phủ toàn chiều rộng -->
+  <div class="hdr__mobile" id="mobile-nav" hidden data-mobile>
+    <nav class="shell" aria-label={lang === 'vi' ? 'Điều hướng di động' : 'Mobile navigation'}>
+      <ul role="list">
+        {
+          links.map((l) => (
+            <li>
+              <a href={l.href} data-mobile-link>
+                <span>{l.label}</span>
+                <Icon name="arrow-right" size={18} />
+              </a>
+            </li>
+          ))
+        }
+        <li>
+          <a href="#contact" data-mobile-link>
+            <span>{t.nav.contact}</span>
+            <Icon name="arrow-right" size={18} />
+          </a>
+        </li>
+      </ul>
+      <a class="btn btn--primary btn--lg hdr__mobile-cta" href="#contact" data-mobile-link>
+        {t.nav.cta}
+      </a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .hdr {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: var(--z-header);
+    /* Trong suốt ở đỉnh trang, có nền khi cuộn xuống */
+    background: transparent;
+    transition:
+      background-color var(--dur-base) var(--ease-out),
+      border-color var(--dur-base) var(--ease-out),
+      backdrop-filter var(--dur-base) var(--ease-out);
+    border-block-end: 1px solid transparent;
+  }
+
+  .hdr[data-stuck] {
+    background: rgb(7 12 24 / 0.82);
+    backdrop-filter: blur(14px) saturate(140%);
+    border-block-end-color: var(--color-border);
+  }
+
+  .hdr__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    min-block-size: var(--header-h);
+  }
+
+  .hdr__brand {
+    display: flex;
+    align-items: center;
+    flex: none;
+    /* Vùng chạm 44px kể cả khi ảnh logo thấp hơn */
+    min-block-size: 2.75rem;
+    margin-inline-end: auto;
+    border-radius: var(--radius-sm);
+  }
+
+  .hdr__brand img {
+    /* Chiều cao cố định, chiều rộng tự co — tránh nhảy layout (CLS) */
+    block-size: 2.25rem;
+    inline-size: auto;
+  }
+
+  .hdr__nav ul {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .hdr__nav a {
+    position: relative;
+    display: inline-block;
+    padding-block: var(--space-2xs);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-fg-muted);
+    text-decoration: none;
+    transition: color var(--dur-base) var(--ease-out);
+  }
+
+  .hdr__nav a::after {
+    content: '';
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline-start: 0;
+    inline-size: 100%;
+    block-size: 1px;
+    background: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  .hdr__nav a:hover {
+    color: var(--color-fg);
+  }
+  .hdr__nav a:hover::after {
+    transform: scaleX(1);
+  }
+
+  .hdr__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    flex: none;
+  }
+
+  .hdr__lang {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3xs);
+    /* 44px: ngưỡng vùng chạm tối thiểu của WCAG 2.5.5 */
+    min-inline-size: 2.75rem;
+    min-block-size: 2.75rem;
+    padding-inline: var(--space-2xs);
+    border-radius: var(--radius-full);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-fg-muted);
+    text-decoration: none;
+    transition:
+      color var(--dur-base) var(--ease-out),
+      background-color var(--dur-base) var(--ease-out);
+  }
+
+  .hdr__lang:hover {
+    color: var(--color-accent);
+    background: var(--a-white-06);
+  }
+
+  .hdr__burger {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    border-radius: var(--radius-full);
+    color: var(--color-fg);
+    transition: background-color var(--dur-base) var(--ease-out);
+  }
+
+  .hdr__burger:hover {
+    background: var(--a-white-06);
+  }
+
+  .hdr__burger .i-close {
+    display: none;
+  }
+  .hdr__burger[aria-expanded='true'] .i-open {
+    display: none;
+  }
+  .hdr__burger[aria-expanded='true'] .i-close {
+    display: block;
+  }
+
+  /* ---- Menu mobile ---- */
+  .hdr__mobile {
+    background: var(--color-bg-sunken);
+    border-block-start: 1px solid var(--color-border);
+    padding-block: var(--space-sm) var(--space-lg);
+  }
+
+  .hdr__mobile ul {
+    margin: 0 0 var(--space-md);
+    padding: 0;
+    list-style: none;
+  }
+
+  .hdr__mobile a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    min-block-size: 3.25rem;
+    padding-block: var(--space-2xs);
+    border-block-end: 1px solid var(--color-border);
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    letter-spacing: var(--tracking-snug);
+    color: var(--color-fg);
+    text-decoration: none;
+  }
+
+  .hdr__mobile a :global(svg) {
+    color: var(--color-accent);
+  }
+
+  .hdr__mobile-cta {
+    display: flex;
+    inline-size: 100%;
+    border-block-end: 0 !important;
+    color: var(--color-on-accent) !important;
+    font-family: var(--font-body) !important;
+    font-size: var(--text-base) !important;
+  }
+
+  /* ---- Điểm gãy: dưới 900px chuyển sang menu mobile ---- */
+  @media (max-width: 56.25rem) {
+    .hdr__nav,
+    .hdr__cta {
+      display: none;
+    }
+    .hdr__burger {
+      display: inline-flex;
+    }
+  }
+
+  @media (min-width: 56.3125rem) {
+    .hdr__mobile {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const burger = document.querySelector<HTMLButtonElement>('[data-burger]');
+  const panel = document.querySelector<HTMLElement>('[data-mobile]');
+  const label = document.querySelector<HTMLElement>('[data-burger-label]');
+
+  if (burger && panel) {
+    // Đọc nhãn từ DOM để không phải nhân đôi chuỗi dịch trong JS
+    const openLabel = label?.textContent ?? '';
+    const closeLabel = document.documentElement.lang === 'vi' ? 'Đóng menu' : 'Close menu';
+
+    const setOpen = (open: boolean) => {
+      burger.setAttribute('aria-expanded', String(open));
+      panel.hidden = !open;
+      if (label) label.textContent = open ? closeLabel : openLabel;
+    };
+
+    burger.addEventListener('click', () => {
+      setOpen(burger.getAttribute('aria-expanded') !== 'true');
+    });
+
+    // Bấm vào link thì đóng menu lại
+    panel.querySelectorAll('[data-mobile-link]').forEach((a) => {
+      a.addEventListener('click', () => setOpen(false));
+    });
+
+    // Escape đóng menu và trả focus về nút
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && burger.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+        burger.focus();
+      }
+    });
+
+    // Quay lại desktop khi menu đang mở -> dọn trạng thái
+    matchMedia('(min-width: 56.3125rem)').addEventListener('change', (e) => {
+      if (e.matches) setOpen(false);
+    });
+  }
+</script>
