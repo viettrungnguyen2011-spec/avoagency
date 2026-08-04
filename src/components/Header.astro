@@ -141,7 +141,9 @@ const contactHref = `${home}#contact`;
   .hdr__nav ul {
     display: flex;
     align-items: center;
-    gap: var(--space-lg);
+    /* Chữ hoa đã có letter-spacing nên khoảng cách giữa các mục thu lại một chút,
+       nếu không hàng nav trông rời rạc */
+    gap: var(--space-md);
     margin: 0;
     padding: 0;
     list-style: none;
@@ -153,8 +155,13 @@ const contactHref = `${home}#contact`;
     align-items: center;
     min-block-size: 2.75rem;
     padding-block: var(--space-2xs);
-    font-size: var(--text-sm);
-    font-weight: 500;
+    /* Viết hoa bằng CSS chứ không sửa chuỗi gốc: trình đọc màn hình vẫn đọc
+       "Vấn đề" bình thường thay vì đánh vần từng chữ cái. */
+    text-transform: uppercase;
+    /* Chữ hoa dính nhau khó đọc hơn chữ thường, phải giãn chữ ra bù lại */
+    letter-spacing: var(--tracking-wide);
+    font-size: var(--text-xs);
+    font-weight: 600;
     color: var(--color-fg-muted);
     text-decoration: none;
     transition: color var(--dur-base) var(--ease-out);
@@ -164,9 +171,11 @@ const contactHref = `${home}#contact`;
     content: '';
     position: absolute;
     /* Gạch chân bám sát chữ chứ không rơi xuống đáy vùng chạm 44px */
-    inset-block-end: 0.55rem;
+    inset-block-end: 0.6rem;
     inset-inline-start: 0;
-    inline-size: 100%;
+    /* Trừ đi phần letter-spacing thừa ở chữ cuối, nếu không gạch chân
+       sẽ thò ra bên phải một đoạn */
+    inline-size: calc(100% - var(--tracking-wide));
     block-size: 1px;
     background: var(--color-accent);
     transform: scaleX(0);
@@ -263,6 +272,8 @@ const contactHref = `${home}#contact`;
     font-family: var(--font-display);
     font-size: var(--text-lg);
     font-weight: 700;
+    /* Cùng một bộ điều hướng nên menu mobile viết hoa giống hàng nav desktop */
+    text-transform: uppercase;
     letter-spacing: var(--tracking-snug);
     color: var(--color-fg);
     text-decoration: none;
@@ -279,6 +290,9 @@ const contactHref = `${home}#contact`;
     color: var(--color-on-accent) !important;
     font-family: var(--font-body) !important;
     font-size: var(--text-base) !important;
+    /* Nút hành động giữ chữ thường — viết hoa hết thì mất điểm nhấn,
+       nút không còn khác biệt so với các link phía trên */
+    text-transform: none !important;
   }
 
   /* ---- Điểm gãy: dưới 900px chuyển sang menu mobile ---- */
