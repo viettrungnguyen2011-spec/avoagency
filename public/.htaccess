@@ -23,8 +23,8 @@
 
   # --- Chọn MỘT trong hai khối dưới đây, bỏ dấu # ở đầu dòng ---
   # Nếu muốn domain KHÔNG có www (khuyến nghị):
-  # RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-  # RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
 
   # Nếu muốn domain CÓ www:
   # RewriteCond %{HTTP_HOST} !^www\. [NC]

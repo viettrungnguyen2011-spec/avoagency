@@ -21,7 +21,7 @@ export const contact = {
   hotlineHref: 'tel:+84879679555',
   zaloName: 'Nguyễn Việt Trung',
   zaloHref: 'https://zalo.me/0879679555',
-  facebookHref: 'https://www.facebook.com/', // TODO: dán link Facebook thật
+  facebookHref: 'https://www.facebook.com/viettrungavo/',
   tiktok: '@avo.agency',
   tiktokHref: 'https://www.tiktok.com/@avo.agency',
 } as const;

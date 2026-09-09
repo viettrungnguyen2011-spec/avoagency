@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config';
 
 // Đổi thành domain thật của bạn trước khi build production.
 // Dùng cho sitemap, canonical URL và thẻ Open Graph.
-const SITE = process.env.PUBLIC_SITE_URL || 'https://avoagency.com';
+const SITE = process.env.PUBLIC_SITE_URL || 'https://avo.com.vn';
 
 export default defineConfig({
   site: SITE,

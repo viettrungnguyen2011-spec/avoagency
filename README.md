@@ -78,9 +78,6 @@ export const contact = {
 };
 ```
 
-> **Cần bạn điền:** trong `contact` có dòng `facebookHref` đang để link Facebook
-> chung chung. Thay bằng link trang Facebook thật của AVO.
-
 Những chỗ đặt trong ngoặc vuông như `[Tên khách hàng]` là nội dung mẫu cần bạn
 thay bằng thông tin thật.
 
@@ -186,7 +183,7 @@ dòng cảnh báo màu vàng thay vì gửi đi — đó là hành vi cố ý đ
 Trước khi build, tạo file `.env` (nếu chưa có) và đặt domain thật:
 
 ```
-PUBLIC_SITE_URL=https://tenmiencuaban.com
+PUBLIC_SITE_URL=https://avo.com.vn
 PUBLIC_FORM_ENDPOINT=...
 ```
 
@@ -227,7 +224,7 @@ Vào **Files → File Manager**, mở thư mục `public_html`.
    thành một file `.zip`
 
    > Nén **nội dung bên trong** `dist/`, không nén cả thư mục `dist`. Nén sai thì
-   > website sẽ nằm ở `tenmien.com/dist/` thay vì ở gốc.
+   > website sẽ nằm ở `avo.com.vn/dist/` thay vì ở gốc.
 
 3. Upload file zip vào `public_html`
 4. Chuột phải file zip → **Extract**
@@ -243,11 +240,11 @@ từ `dist/.htaccess`.
 
 ### Bước 4 — Kiểm tra kết quả
 
-Mở `https://tenmiencuaban.com`. Kiểm tra:
+Mở `https://avo.com.vn`. Kiểm tra:
 
 - Trang chủ tiếng Việt hiện đúng, chữ có dấu đầy đủ
-- `https://tenmiencuaban.com/en/` ra bản tiếng Anh
-- `https://tenmiencuaban.com/khong-ton-tai` ra trang 404 của AVO
+- `https://avo.com.vn/en/` ra bản tiếng Anh
+- `https://avo.com.vn/khong-ton-tai` ra trang 404 của AVO
 - Gửi thử form và kiểm tra email
 
 > **Nếu gặp lỗi 500 Internal Server Error:** gói hosting của bạn tắt một module
@@ -324,12 +321,12 @@ avo-agency/
 
 ## 10. Checklist trước khi lên sóng
 
-- [ ] Đổi `PUBLIC_SITE_URL` trong `.env` thành domain thật
+- [x] ~~Đổi `PUBLIC_SITE_URL` trong `.env` thành domain thật~~ → `https://avo.com.vn`
 - [ ] Kết nối form và gửi thử một lần, xác nhận nhận được email
-- [ ] Thay `facebookHref` trong `src/i18n/ui.ts` bằng link Facebook thật
+- [x] ~~Thay `facebookHref` trong `src/i18n/ui.ts` bằng link Facebook thật~~
 - [ ] Rà lại toàn bộ nội dung trong `src/i18n/ui.ts` — đặc biệt các chỗ trong `[ ]`
 - [ ] Bật SSL trên Hostinger **trước khi** upload
-- [ ] Chọn dùng `www` hay không, rồi bỏ ghi chú khối tương ứng trong `.htaccess`
+- [x] ~~Chọn dùng `www` hay không~~ → đã bật chuyển hướng về bản **không có www**
 - [ ] Kiểm tra trên điện thoại thật, không chỉ thu nhỏ cửa sổ trình duyệt
 - [ ] Gửi link vào Zalo/Facebook xem ảnh chia sẻ hiện đúng
 - [ ] Khai báo website với [Google Search Console](https://search.google.com/search-console)
@@ -351,5 +348,5 @@ Ba font đang dùng — Bricolage Grotesque, Inter, JetBrains Mono — đều đ
 kiểm tra là **có đầy đủ bộ dấu tiếng Việt** trước khi chọn.
 
 **Muốn thêm trang mới?** Tạo file trong `src/pages/`. Ví dụ `src/pages/bang-gia.astro`
-sẽ thành `tenmien.com/bang-gia/`. Nhớ tạo bản tiếng Anh tương ứng trong
+sẽ thành `avo.com.vn/bang-gia/`. Nhớ tạo bản tiếng Anh tương ứng trong
 `src/pages/en/` và thêm vào `src/pages/sitemap.xml.ts`.
