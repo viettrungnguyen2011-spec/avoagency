@@ -212,6 +212,25 @@ export const ui = {
       ],
     },
 
+    gallery: {
+      eyebrow: 'Năng lực thực tế',
+      title: 'Chúng tôi đứng lớp, không chỉ chạy ads.',
+      lede: 'Các khoá đào tạo TikTok Ads và TikTok Shop tại Hà Nội, Nam Định, TP Vinh và nhiều sự kiện khác. Kinh nghiệm được kiểm chứng trước hàng trăm người, không phải trong phòng họp.',
+      viewLabel: 'Xem ảnh lớn',
+      closeLabel: 'Đóng',
+      captions: {
+        'su-kien-tp-vinh-hoi-truong': 'Đào tạo TikTok tại sự kiện TP Vinh',
+        'su-kien-crazy-tiktok': 'Sự kiện Crazy TikTok — xây dựng hệ thống bán hàng',
+        'su-kien-seller-van-don': 'Sự kiện Seller Vạn Đơn',
+        'su-kien-seller-van-don-2': 'Sự kiện Seller Vạn Đơn — trao đổi cùng khách mời',
+        'lam-viec-cung-doi-tac': 'Làm việc cùng đối tác tại sự kiện',
+        'quay-video-huong-dan': 'Quay video hướng dẫn học viên',
+        'lop-tiktok-ads-k10-ha-noi': 'Lớp đào tạo TikTok Ads K10 — Hà Nội',
+        'dao-tao-nam-dinh': 'Đào tạo TikTok Ads tại Nam Định',
+        'su-kien-tp-vinh-san-khau': 'Trình bày trên sân khấu sự kiện TP Vinh',
+      },
+    },
+
     audience: {
       eyebrow: 'Khách hàng',
       title: 'Chúng tôi phục vụ ai?',
@@ -506,6 +525,25 @@ export const ui = {
           points: ['Sales jump', 'Ad costs come down', 'Blocked shops get unblocked fast'],
         },
       ],
+    },
+
+    gallery: {
+      eyebrow: 'Track record',
+      title: 'We teach this, not just run it.',
+      lede: 'TikTok Ads and TikTok Shop training courses in Hanoi, Nam Dinh, Vinh City and other events. Experience proven in front of hundreds of people, not in a meeting room.',
+      viewLabel: 'View larger',
+      closeLabel: 'Close',
+      captions: {
+        'su-kien-tp-vinh-hoi-truong': 'TikTok training at the Vinh City event',
+        'su-kien-crazy-tiktok': 'Crazy TikTok — building a selling system',
+        'su-kien-seller-van-don': 'Seller Van Don event',
+        'su-kien-seller-van-don-2': 'Seller Van Don — with an invited guest',
+        'lam-viec-cung-doi-tac': 'Working with partners at an event',
+        'quay-video-huong-dan': 'Filming a tutorial for trainees',
+        'lop-tiktok-ads-k10-ha-noi': 'TikTok Ads course K10 — Hanoi',
+        'dao-tao-nam-dinh': 'TikTok Ads training in Nam Dinh',
+        'su-kien-tp-vinh-san-khau': 'On stage at the Vinh City event',
+      },
     },
 
     audience: {

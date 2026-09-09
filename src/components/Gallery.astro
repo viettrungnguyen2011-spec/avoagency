@@ -1,0 +1,377 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+// Ảnh nằm trong src/assets nên Astro tự tối ưu: sinh WebP, nhiều kích cỡ,
+// và gắn sẵn width/height để trang không bị nhảy layout khi ảnh tải xong.
+import hoiTruong from '../assets/gallery/su-kien-tp-vinh-hoi-truong.jpg';
+import crazyTiktok from '../assets/gallery/su-kien-crazy-tiktok.jpg';
+import sellerVanDon from '../assets/gallery/su-kien-seller-van-don.jpg';
+import doiTac from '../assets/gallery/lam-viec-cung-doi-tac.jpg';
+import sanKhau from '../assets/gallery/su-kien-tp-vinh-san-khau.jpg';
+import quayVideo from '../assets/gallery/quay-video-huong-dan.jpg';
+import lopK10 from '../assets/gallery/lop-tiktok-ads-k10-ha-noi.jpg';
+import namDinh from '../assets/gallery/dao-tao-nam-dinh.jpg';
+import sellerVanDon2 from '../assets/gallery/su-kien-seller-van-don-2.jpg';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const caps = t.gallery.captions;
+
+// Bố cục lưới 4 cột, 3 hàng, khít không chừa lỗ:
+//   hàng 1-2: ô lớn 2x2 (ảnh hội trường) + 4 ô nhỏ ở cột 3-4
+//   hàng 3  : 4 ô đều nhau
+// Đúng 9 ảnh. Thêm hoặc bớt ảnh thì phải tính lại bố cục, nếu không lưới sẽ
+// thừa một ô trống ở hàng cuối.
+const items = [
+  { slug: 'su-kien-tp-vinh-hoi-truong', img: hoiTruong, size: 'featured' },
+  { slug: 'su-kien-crazy-tiktok', img: crazyTiktok, size: 'normal' },
+  { slug: 'su-kien-seller-van-don', img: sellerVanDon, size: 'normal' },
+  { slug: 'lam-viec-cung-doi-tac', img: doiTac, size: 'normal' },
+  { slug: 'su-kien-tp-vinh-san-khau', img: sanKhau, size: 'normal' },
+  { slug: 'quay-video-huong-dan', img: quayVideo, size: 'normal' },
+  { slug: 'lop-tiktok-ads-k10-ha-noi', img: lopK10, size: 'normal' },
+  { slug: 'dao-tao-nam-dinh', img: namDinh, size: 'normal' },
+  { slug: 'su-kien-seller-van-don-2', img: sellerVanDon2, size: 'normal' },
+] as const;
+---
+
+<section class="section gal" id="gallery">
+  <div class="shell">
+    <header class="gal__head">
+      <p class="eyebrow" data-reveal-target>{t.gallery.eyebrow}</p>
+      <h2 data-reveal-target data-reveal-delay="60">{t.gallery.title}</h2>
+      <p class="lede" data-reveal-target data-reveal-delay="120">{t.gallery.lede}</p>
+    </header>
+
+    <ul class="gal__grid" role="list">
+      {
+        items.map((item, i) => {
+          const caption = caps[item.slug as keyof typeof caps];
+          return (
+            <li class:list={['gal__cell', `gal__cell--${item.size}`]} data-reveal-target>
+              {/* Nút chứ không phải thẻ a: mở ảnh lớn ngay tại chỗ, không rời trang.
+                  Dùng button để bàn phím và trình đọc màn hình dùng được. */}
+              <button
+                class="gal__btn"
+                type="button"
+                data-lightbox
+                data-full={item.img.src}
+                data-caption={caption}
+              >
+                <Image
+                  src={item.img}
+                  alt={caption}
+                  widths={item.size === 'featured' ? [640, 900, 1300] : [400, 640, 900]}
+                  sizes={
+                    item.size === 'featured'
+                      ? '(min-width: 64rem) 46vw, (min-width: 40rem) 92vw, 92vw'
+                      : '(min-width: 64rem) 23vw, (min-width: 40rem) 46vw, 92vw'
+                  }
+                  loading={i < 3 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  quality={78}
+                />
+                <span class="gal__veil" aria-hidden="true" />
+                <span class="gal__cap">
+                  <span class="gal__cap-text">{caption}</span>
+                  <span class="gal__cap-icon" aria-hidden="true">
+                    <Icon name="arrow-right" size={15} />
+                  </span>
+                </span>
+              </button>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</section>
+
+{/* Hộp xem ảnh lớn. Dùng thẻ <dialog> gốc của trình duyệt nên đã có sẵn
+    bẫy focus, đóng bằng Escape, và lớp phủ nền — không cần thư viện. */}
+<dialog class="lb" data-lb aria-label={t.gallery.viewLabel}>
+  <button class="lb__close" type="button" data-lb-close aria-label={t.gallery.closeLabel}>
+    <Icon name="close" size={20} />
+  </button>
+  <figure class="lb__fig">
+    <img class="lb__img" data-lb-img src="" alt="" />
+    <figcaption class="lb__cap" data-lb-cap></figcaption>
+  </figure>
+</dialog>
+
+<style>
+  .gal {
+    background: var(--color-bg);
+  }
+
+  .gal__head {
+    max-inline-size: 46rem;
+    margin-block-end: var(--space-2xl);
+  }
+
+  .gal__head h2 {
+    margin-block: var(--space-sm) var(--space-md);
+  }
+
+  /* ---------- Lưới ---------- */
+  .gal__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Hai cột: ô lớn trải ngang thành dải banner, vẫn giữ tỉ lệ 3:2 */
+  @media (min-width: 40rem) and (max-width: 63.9375rem) {
+    .gal__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .gal__cell--featured {
+      grid-column: span 2;
+    }
+  }
+
+  /* Bốn cột: ô lớn chiếm 2x2, chiều cao do hai hàng bên cạnh quyết định */
+  @media (min-width: 64rem) {
+    .gal__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .gal__cell--featured {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+    /* Bỏ tỉ lệ cố định, cho ảnh kéo cao đúng bằng 2 hàng.
+       Không làm bước này thì ô lớn hụt đáy khoảng 20px so với lưới. */
+    .gal__cell--featured .gal__btn :global(img) {
+      aspect-ratio: auto;
+      block-size: 100%;
+    }
+  }
+
+  .gal__cell {
+    min-inline-size: 0;
+    /* Ô kéo cao hết hàng của nó; nếu không, ô bị hàng cao hơn kéo giãn
+       sẽ để lộ khoảng trống bên dưới ảnh. */
+    display: grid;
+  }
+
+  .gal__btn {
+    position: relative;
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    cursor: pointer;
+    transition:
+      border-color var(--dur-base) var(--ease-out),
+      transform var(--dur-base) var(--ease-out);
+  }
+
+  .gal__btn:hover {
+    border-color: var(--a-gold-32);
+    transform: translateY(-2px);
+  }
+
+  .gal__btn :global(img) {
+    inline-size: 100%;
+    block-size: 100%;
+    /* Ảnh gốc tỉ lệ 3:2 và 3:4 lẫn lộn — cover giữ khung lưới đều nhau.
+       Bấm vào sẽ xem được ảnh đầy đủ không bị cắt. */
+    object-fit: cover;
+    aspect-ratio: 3 / 2;
+    display: block;
+    transition: scale var(--dur-slow) var(--ease-out);
+  }
+
+  .gal__btn:hover :global(img) {
+    scale: 1.03;
+  }
+
+  /* Lớp phủ tối dần ở đáy để chữ chú thích luôn đọc được,
+     dù ảnh bên dưới sáng hay tối. */
+  .gal__veil {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    block-size: 62%;
+    background: linear-gradient(to top, rgb(5 8 15 / 0.92) 0%, rgb(5 8 15 / 0.55) 42%, transparent 100%);
+    pointer-events: none;
+  }
+
+  .gal__cap {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    padding: var(--space-sm);
+    text-align: start;
+  }
+
+  .gal__cap-text {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    line-height: var(--leading-snug);
+    letter-spacing: var(--tracking-snug);
+    color: #f2f4f8;
+    text-shadow: 0 1px 3px rgb(0 0 0 / 0.6);
+  }
+
+  .gal__cell--featured .gal__cap-text {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 700;
+  }
+
+  .gal__cap-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    inline-size: 1.75rem;
+    block-size: 1.75rem;
+    border-radius: var(--radius-full);
+    background: var(--a-gold-16);
+    color: var(--color-accent);
+    opacity: 0;
+    translate: -6px 0;
+    transition:
+      opacity var(--dur-base) var(--ease-out),
+      translate var(--dur-base) var(--ease-out);
+  }
+
+  .gal__btn:hover .gal__cap-icon,
+  .gal__btn:focus-visible .gal__cap-icon {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  /* ---------- Hộp xem ảnh lớn ---------- */
+  .lb {
+    inline-size: min(94vw, 76rem);
+    max-inline-size: none;
+    max-block-size: 92dvh;
+    padding: 0;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    background: var(--navy-900);
+    color: var(--color-fg);
+    overflow: visible;
+  }
+
+  .lb::backdrop {
+    background: rgb(3 5 10 / 0.86);
+    backdrop-filter: blur(3px);
+  }
+
+  .lb__fig {
+    margin: 0;
+    display: grid;
+  }
+
+  .lb__img {
+    inline-size: 100%;
+    max-block-size: calc(92dvh - 4rem);
+    object-fit: contain;
+    border-start-start-radius: var(--radius-lg);
+    border-start-end-radius: var(--radius-lg);
+    background: var(--navy-950);
+  }
+
+  .lb__cap {
+    padding: var(--space-sm) var(--space-md);
+    border-block-start: 1px solid var(--color-border);
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+
+  .lb__close {
+    position: absolute;
+    inset-block-start: calc(-1 * var(--space-xl));
+    inset-inline-end: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    border-radius: var(--radius-full);
+    background: var(--a-white-10);
+    color: #fff;
+    transition: background-color var(--dur-base) var(--ease-out);
+  }
+
+  .lb__close:hover {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  @media (max-width: 40rem) {
+    .lb__close {
+      inset-block-start: var(--space-2xs);
+      inset-inline-end: var(--space-2xs);
+      background: rgb(5 8 15 / 0.7);
+    }
+  }
+</style>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-lb]');
+  const lbImg = document.querySelector<HTMLImageElement>('[data-lb-img]');
+  const lbCap = document.querySelector<HTMLElement>('[data-lb-cap]');
+  const closeBtn = document.querySelector<HTMLButtonElement>('[data-lb-close]');
+
+  if (dialog && lbImg && lbCap) {
+    // Nhớ nút đã bấm để khi đóng thì trả tiêu điểm về đúng chỗ cũ,
+    // nếu không người dùng bàn phím sẽ bị văng về đầu trang.
+    let opener: HTMLElement | null = null;
+
+    document.querySelectorAll<HTMLButtonElement>('[data-lightbox]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        opener = btn;
+        lbImg.src = btn.dataset.full ?? '';
+        lbImg.alt = btn.dataset.caption ?? '';
+        lbCap.textContent = btn.dataset.caption ?? '';
+        dialog.showModal();
+      });
+    });
+
+    // Dọn dẹp được gọi thẳng ở từng chỗ đóng, thay vì chờ sự kiện 'close'.
+    // Lý do: sự kiện 'close' của <dialog> không phát trong một số môi trường,
+    // khiến tiêu điểm không quay về nút cũ và ảnh lớn vẫn nằm trong bộ nhớ.
+    const closeLightbox = () => {
+      if (dialog.open) dialog.close();
+      lbImg.removeAttribute('src');
+      opener?.focus();
+      opener = null;
+    };
+
+    closeBtn?.addEventListener('click', closeLightbox);
+
+    // Bấm ra vùng nền ngoài ảnh thì đóng
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) closeLightbox();
+    });
+
+    // Phím Escape: chặn hành vi mặc định rồi tự đóng, để chạy được phần dọn dẹp
+    dialog.addEventListener('cancel', (e) => {
+      e.preventDefault();
+      closeLightbox();
+    });
+
+    // Lưới an toàn: nếu môi trường nào đó vẫn phát 'close' (ví dụ người dùng
+    // đóng bằng cách khác), dọn dẹp vẫn chạy. Gọi hai lần cũng vô hại.
+    dialog.addEventListener('close', closeLightbox);
+  }
+</script>
