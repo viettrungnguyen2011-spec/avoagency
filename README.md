@@ -98,8 +98,10 @@ Dải tổng hợp cuối mục (tổng chi phí, tổng doanh thu, ROI gộp) �
 mảng này**, không gõ tay. Sửa số ở đây là phần tổng tự cập nhật theo.
 
 ROI gộp tính bằng tổng doanh thu chia tổng chi phí, **không phải trung bình
-cộng các ROI** — cách trung bình cộng cho số cao hơn thực tế vì chiến dịch nhỏ
-được tính ngang chiến dịch lớn.
+cộng các ROI**. Trung bình cộng tính một chiến dịch 1,1 triệu ngang với một
+chiến dịch 16,4 triệu, nên không phản ánh đúng hiệu quả trên tổng tiền đã chi.
+Tuỳ dữ liệu mà nó cho số cao hơn hoặc thấp hơn ROI gộp — với 6 chiến dịch hiện
+tại là 11,93 so với 12,16.
 
 Thêm chiến dịch mới: copy ảnh vào `src/assets/results/`, thêm một dòng vào mảng,
 rồi thêm dòng `import` tương ứng trong `src/components/Results.astro`.

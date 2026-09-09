@@ -36,9 +36,14 @@ export const adResults: AdResult[] = [
   { slug: 'ket-qua-6', cost: 1_241_705, orders: 24, costPerOrder: 51_738, revenue: 6_946_599, roi: 5.59 },
 ];
 
-/** Tổng hợp toàn bộ chiến dịch. ROI gộp = tổng doanh thu / tổng chi phí,
- *  KHÔNG phải trung bình cộng các ROI — cách đó cho số cao hơn thực tế
- *  vì chiến dịch nhỏ được tính ngang chiến dịch lớn. */
+/** Tổng hợp toàn bộ chiến dịch.
+ *
+ *  ROI gộp = tổng doanh thu / tổng chi phí. KHÔNG dùng trung bình cộng các ROI:
+ *  cách đó tính một chiến dịch 1,1 triệu ngang với một chiến dịch 16,4 triệu,
+ *  nên con số ra không phản ánh đúng hiệu quả trên tổng số tiền đã chi.
+ *
+ *  Tuỳ bộ dữ liệu mà trung bình cộng có thể cao hoặc thấp hơn ROI gộp — với
+ *  6 chiến dịch hiện tại nó cho 11,93 trong khi ROI gộp là 12,16. */
 export function summarise(rows: AdResult[]) {
   const cost = rows.reduce((s, r) => s + r.cost, 0);
   const revenue = rows.reduce((s, r) => s + r.revenue, 0);
