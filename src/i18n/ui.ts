@@ -212,6 +212,29 @@ export const ui = {
       ],
     },
 
+    results: {
+      eyebrow: 'Kết quả chạy ads',
+      title: 'Số liệu chụp thẳng từ trình quản lý quảng cáo.',
+      lede: 'Không phải con số chúng tôi tự khai. Bấm vào từng chiến dịch để xem ảnh chụp màn hình gốc từ Trình quản lý quảng cáo TikTok.',
+      roiLabel: 'ROI',
+      roiUnit: 'lần',
+      costLabel: 'Chi phí',
+      revenueLabel: 'Doanh thu',
+      ordersLabel: 'Số đơn',
+      cpoLabel: 'Chi phí mỗi đơn',
+      proofLabel: 'Xem ảnh chụp màn hình',
+      campaignPrefix: 'Chiến dịch',
+      totalTitle: 'Tổng sáu chiến dịch trên',
+      totalCampaigns: 'Chiến dịch',
+      totalCost: 'Tổng chi phí',
+      totalRevenue: 'Tổng doanh thu',
+      totalOrders: 'Tổng đơn',
+      totalRoi: 'ROI gộp',
+      disclaimer:
+        'Ảnh chụp từ tài khoản quảng cáo thật, đã ẩn toàn bộ thông tin định danh khách hàng. ROI gộp tính bằng tổng doanh thu chia tổng chi phí, không phải trung bình cộng các ROI. Kết quả từng chiến dịch phụ thuộc ngành hàng, sản phẩm, giá bán và ngân sách — đây là số liệu đã đạt được, không phải mức cam kết.',
+      captionTemplate: 'Chiến dịch ROI {roi} lần — chi phí {cost}, doanh thu {revenue}',
+    },
+
     gallery: {
       eyebrow: 'Năng lực thực tế',
       title: 'Chúng tôi đứng lớp, không chỉ chạy ads.',
@@ -525,6 +548,29 @@ export const ui = {
           points: ['Sales jump', 'Ad costs come down', 'Blocked shops get unblocked fast'],
         },
       ],
+    },
+
+    results: {
+      eyebrow: 'Ad performance',
+      title: 'Numbers straight from the ads manager.',
+      lede: 'Not figures we typed up ourselves. Click any campaign to see the original TikTok Ads Manager screenshot.',
+      roiLabel: 'ROI',
+      roiUnit: 'x',
+      costLabel: 'Ad spend',
+      revenueLabel: 'Revenue',
+      ordersLabel: 'Orders',
+      cpoLabel: 'Cost per order',
+      proofLabel: 'View screenshot',
+      campaignPrefix: 'Campaign',
+      totalTitle: 'Across the six campaigns above',
+      totalCampaigns: 'Campaigns',
+      totalCost: 'Total spend',
+      totalRevenue: 'Total revenue',
+      totalOrders: 'Total orders',
+      totalRoi: 'Blended ROI',
+      disclaimer:
+        'Screenshots come from live ad accounts with all client-identifying details removed. Blended ROI is total revenue divided by total spend, not an average of the individual ROIs. Per-campaign results depend on category, product, price point and budget — these are results achieved, not results guaranteed.',
+      captionTemplate: 'Campaign at {roi}x ROI — {cost} spend, {revenue} revenue',
     },
 
     gallery: {

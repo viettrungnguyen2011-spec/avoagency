@@ -81,6 +81,29 @@ export const contact = {
 Những chỗ đặt trong ngoặc vuông như `[Tên khách hàng]` là nội dung mẫu cần bạn
 thay bằng thông tin thật.
 
+### Số liệu kết quả chạy ads
+
+Nằm ở `src/i18n/results.ts`. Mỗi dòng tương ứng một ảnh chụp dashboard trong
+`src/assets/results/`, tên file phải khớp với trường `slug`:
+
+```ts
+{ slug: 'ket-qua-1', cost: 3_631_294, orders: 107,
+  costPerOrder: 33_937, revenue: 71_682_891, roi: 19.74 },
+```
+
+> **Số phải khớp tuyệt đối với ảnh.** Khách bấm vào là thấy ảnh gốc — lệch một
+> con số là mất uy tín ngay lập tức.
+
+Dải tổng hợp cuối mục (tổng chi phí, tổng doanh thu, ROI gộp) được **tính từ
+mảng này**, không gõ tay. Sửa số ở đây là phần tổng tự cập nhật theo.
+
+ROI gộp tính bằng tổng doanh thu chia tổng chi phí, **không phải trung bình
+cộng các ROI** — cách trung bình cộng cho số cao hơn thực tế vì chiến dịch nhỏ
+được tính ngang chiến dịch lớn.
+
+Thêm chiến dịch mới: copy ảnh vào `src/assets/results/`, thêm một dòng vào mảng,
+rồi thêm dòng `import` tương ứng trong `src/components/Results.astro`.
+
 ### Chính sách quyền riêng tư
 
 Nội dung chính sách nằm riêng ở `src/i18n/privacy.ts` (dài nên tách ra cho đỡ
@@ -332,12 +355,19 @@ avo-agency/
 │   │   ├── Why.astro        # 4 điểm khác biệt
 │   │   ├── Process.astro    # 5 bước hợp tác
 │   │   ├── Audience.astro   # khách hàng + lời kết
+│   │   ├── Results.astro    # bảng kết quả chạy ads + dải tổng hợp
+│   │   ├── Gallery.astro    # thư viện ảnh năng lực
 │   │   ├── ContactForm.astro
 │   │   ├── Footer.astro
 │   │   ├── LegalDoc.astro   # khung hiển thị văn bản pháp lý + mục lục
+│   │   ├── Lightbox.astro   # hộp xem ảnh lớn, dùng chung cả trang
 │   │   └── Icon.astro       # bộ icon SVG dùng chung
+│   ├── assets/
+│   │   ├── gallery/         # ảnh sự kiện, đào tạo (đã xoá EXIF)
+│   │   └── results/         # ảnh chụp dashboard quảng cáo
 │   ├── i18n/
 │   │   ├── ui.ts            # >>> TOÀN BỘ CHỮ TRANG CHỦ NẰM Ở ĐÂY <<<
+│   │   ├── results.ts       # >>> SỐ LIỆU CHIẾN DỊCH ADS <<<
 │   │   └── privacy.ts       # nội dung chính sách quyền riêng tư
 │   ├── layouts/Base.astro   # khung HTML, thẻ meta, SEO
 │   ├── pages/

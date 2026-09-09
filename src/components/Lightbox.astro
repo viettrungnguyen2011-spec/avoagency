@@ -1,0 +1,148 @@
+---
+import Icon from './Icon.astro';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+// Hộp xem ảnh lớn dùng chung cho cả trang.
+// Đặt MỘT lần trong layout; mọi nút có thuộc tính data-lightbox trên trang
+// đều dùng chung hộp này. Nhờ vậy thư viện ảnh và bảng kết quả ads không
+// phải mỗi bên dựng một hộp riêng.
+//
+// Nút gọi cần hai thuộc tính:
+//   data-full    — đường dẫn ảnh kích thước đầy đủ
+//   data-caption — dòng chú thích hiện dưới ảnh
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<dialog class="lb" data-lb aria-label={t.gallery.viewLabel}>
+  <button class="lb__close" type="button" data-lb-close aria-label={t.gallery.closeLabel}>
+    <Icon name="close" size={20} />
+  </button>
+  <figure class="lb__fig">
+    <img class="lb__img" data-lb-img alt="" />
+    <figcaption class="lb__cap" data-lb-cap></figcaption>
+  </figure>
+</dialog>
+
+<style>
+  .lb {
+    inline-size: min(94vw, 76rem);
+    max-inline-size: none;
+    max-block-size: 92dvh;
+    padding: 0;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    background: var(--navy-900);
+    color: var(--color-fg);
+    overflow: visible;
+  }
+
+  .lb::backdrop {
+    background: rgb(3 5 10 / 0.86);
+    backdrop-filter: blur(3px);
+  }
+
+  .lb__fig {
+    margin: 0;
+    display: grid;
+  }
+
+  .lb__img {
+    inline-size: 100%;
+    max-block-size: calc(92dvh - 4rem);
+    object-fit: contain;
+    border-start-start-radius: var(--radius-lg);
+    border-start-end-radius: var(--radius-lg);
+    /* Nền trắng: ảnh chụp dashboard TikTok vốn nền trắng, để nền tối
+       sẽ thấy viền đen quanh ảnh rất bẩn. */
+    background: #fff;
+  }
+
+  .lb__cap {
+    padding: var(--space-sm) var(--space-md);
+    border-block-start: 1px solid var(--color-border);
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+  }
+
+  .lb__close {
+    position: absolute;
+    inset-block-start: calc(-1 * var(--space-xl));
+    inset-inline-end: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    border-radius: var(--radius-full);
+    background: var(--a-white-10);
+    color: #fff;
+    transition: background-color var(--dur-base) var(--ease-out);
+  }
+
+  .lb__close:hover {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+  }
+
+  @media (max-width: 40rem) {
+    .lb__close {
+      inset-block-start: var(--space-2xs);
+      inset-inline-end: var(--space-2xs);
+      background: rgb(5 8 15 / 0.7);
+    }
+  }
+</style>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-lb]');
+  const lbImg = document.querySelector<HTMLImageElement>('[data-lb-img]');
+  const lbCap = document.querySelector<HTMLElement>('[data-lb-cap]');
+  const closeBtn = document.querySelector<HTMLButtonElement>('[data-lb-close]');
+
+  if (dialog && lbImg && lbCap) {
+    // Nhớ nút đã bấm để khi đóng thì trả tiêu điểm về đúng chỗ cũ,
+    // nếu không người dùng bàn phím sẽ bị văng về đầu trang.
+    let opener: HTMLElement | null = null;
+
+    document.querySelectorAll<HTMLElement>('[data-lightbox]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        opener = btn;
+        lbImg.src = btn.dataset.full ?? '';
+        lbImg.alt = btn.dataset.caption ?? '';
+        lbCap.textContent = btn.dataset.caption ?? '';
+        dialog.showModal();
+      });
+    });
+
+    // Dọn dẹp được gọi thẳng ở từng chỗ đóng, thay vì chờ sự kiện 'close'.
+    // Lý do: sự kiện 'close' của <dialog> không phát trong một số môi trường,
+    // khiến tiêu điểm không quay về nút cũ và ảnh lớn vẫn nằm trong bộ nhớ.
+    const closeLightbox = () => {
+      if (dialog.open) dialog.close();
+      lbImg.removeAttribute('src');
+      opener?.focus();
+      opener = null;
+    };
+
+    closeBtn?.addEventListener('click', closeLightbox);
+
+    // Bấm ra vùng nền ngoài ảnh thì đóng
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) closeLightbox();
+    });
+
+    // Phím Escape: chặn hành vi mặc định rồi tự đóng, để chạy được phần dọn dẹp
+    dialog.addEventListener('cancel', (e) => {
+      e.preventDefault();
+      closeLightbox();
+    });
+
+    // Lưới an toàn: nếu môi trường nào đó vẫn phát 'close', dọn dẹp vẫn chạy.
+    // Gọi hai lần cũng vô hại.
+    dialog.addEventListener('close', closeLightbox);
+  }
+</script>

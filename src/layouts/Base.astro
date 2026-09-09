@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Lightbox from '../components/Lightbox.astro';
 import { useTranslations, type Lang } from '../i18n/ui';
 
 interface Props {
@@ -91,6 +92,9 @@ const preloadFonts = [
       <slot />
     </main>
     <Footer lang={lang} />
+
+    {/* Đặt một lần cho cả trang; mọi nút data-lightbox đều dùng chung */}
+    <Lightbox lang={lang} />
 
     <script>
       // ---- Hiện dần khi cuộn tới ----

@@ -1,0 +1,358 @@
+---
+import Icon from './Icon.astro';
+import { useTranslations, type Lang } from '../i18n/ui';
+import { adResults, summarise } from '../i18n/results';
+
+// Ảnh chụp dashboard chỉ mở trong hộp xem ảnh lớn, không hiện thu nhỏ trên
+// thẻ. Lý do: chữ trong dashboard rất nhỏ, thu lại thì không ai đọc nổi, mà
+// giao diện TikTok chỉ có tiếng Việt nên đặt ở trang tiếng Anh cũng lạc lõng.
+// Số liệu tách ra thành chữ đọc được, ảnh giữ vai trò bằng chứng khi bấm vào.
+import kq1 from '../assets/results/ket-qua-1.png';
+import kq2 from '../assets/results/ket-qua-2.png';
+import kq3 from '../assets/results/ket-qua-3.png';
+import kq4 from '../assets/results/ket-qua-4.png';
+import kq5 from '../assets/results/ket-qua-5.png';
+import kq6 from '../assets/results/ket-qua-6.png';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const shots: Record<string, ImageMetadata> = {
+  'ket-qua-1': kq1,
+  'ket-qua-2': kq2,
+  'ket-qua-3': kq3,
+  'ket-qua-4': kq4,
+  'ket-qua-5': kq5,
+  'ket-qua-6': kq6,
+};
+
+const locale = lang === 'vi' ? 'vi-VN' : 'en-US';
+const money = new Intl.NumberFormat(locale, {
+  style: 'currency',
+  currency: 'VND',
+  maximumFractionDigits: 0,
+});
+const plain = new Intl.NumberFormat(locale);
+const dec = new Intl.NumberFormat(locale, {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+const total = summarise(adResults);
+
+const caption = (roi: number, cost: number, revenue: number) =>
+  t.results.captionTemplate
+    .replace('{roi}', dec.format(roi))
+    .replace('{cost}', money.format(cost))
+    .replace('{revenue}', money.format(revenue));
+---
+
+<section class="section res" id="results">
+  <div class="shell">
+    <header class="res__head">
+      <p class="eyebrow" data-reveal-target>{t.results.eyebrow}</p>
+      <h2 data-reveal-target data-reveal-delay="60">{t.results.title}</h2>
+      <p class="lede" data-reveal-target data-reveal-delay="120">{t.results.lede}</p>
+    </header>
+
+    {/* Dải tổng hợp. Mọi con số ở đây tính từ mảng dữ liệu, không gõ tay,
+        nên không bao giờ lệch với các thẻ bên dưới. */}
+    <div class="res__total" data-reveal-target data-reveal-delay="160">
+      <p class="res__total-label">{t.results.totalTitle}</p>
+      <dl class="res__total-grid">
+        <div>
+          <dt>{t.results.totalCampaigns}</dt>
+          <dd>{plain.format(total.campaigns)}</dd>
+        </div>
+        <div>
+          <dt>{t.results.totalCost}</dt>
+          <dd>{money.format(total.cost)}</dd>
+        </div>
+        <div>
+          <dt>{t.results.totalRevenue}</dt>
+          <dd>{money.format(total.revenue)}</dd>
+        </div>
+        <div>
+          <dt>{t.results.totalOrders}</dt>
+          <dd>{plain.format(total.orders)}</dd>
+        </div>
+        <div class="res__total-hl">
+          <dt>{t.results.totalRoi}</dt>
+          <dd>
+            {dec.format(total.roi)}<span class="res__unit">{t.results.roiUnit}</span>
+          </dd>
+        </div>
+      </dl>
+    </div>
+
+    <ul class="res__grid" role="list">
+      {
+        adResults.map((r, i) => {
+          const cap = caption(r.roi, r.cost, r.revenue);
+          return (
+            <li class="rcard" data-reveal-target>
+              <div class="rcard__top">
+                <span class="rcard__num">
+                  {t.results.campaignPrefix} {String(i + 1).padStart(2, '0')}
+                </span>
+              </div>
+
+              <p class="rcard__roi">
+                <span class="rcard__roi-label">{t.results.roiLabel}</span>
+                <span class="rcard__roi-value">
+                  {dec.format(r.roi)}<span class="res__unit">{t.results.roiUnit}</span>
+                </span>
+              </p>
+
+              <dl class="rcard__stats">
+                <div>
+                  <dt>{t.results.costLabel}</dt>
+                  <dd>{money.format(r.cost)}</dd>
+                </div>
+                <div>
+                  <dt>{t.results.revenueLabel}</dt>
+                  <dd class="rcard__revenue">{money.format(r.revenue)}</dd>
+                </div>
+                <div>
+                  <dt>{t.results.ordersLabel}</dt>
+                  <dd>{plain.format(r.orders)}</dd>
+                </div>
+                <div>
+                  <dt>{t.results.cpoLabel}</dt>
+                  <dd>{money.format(r.costPerOrder)}</dd>
+                </div>
+              </dl>
+
+              <button
+                class="rcard__proof"
+                type="button"
+                data-lightbox
+                data-full={shots[r.slug].src}
+                data-caption={cap}
+              >
+                <Icon name="chart" size={16} />
+                <span>{t.results.proofLabel}</span>
+              </button>
+            </li>
+          );
+        })
+      }
+    </ul>
+
+    <p class="res__note" data-reveal-target>{t.results.disclaimer}</p>
+  </div>
+</section>
+
+<style>
+  .res {
+    background: var(--color-bg-sunken);
+  }
+
+  .res__head {
+    max-inline-size: 46rem;
+    margin-block-end: var(--space-xl);
+  }
+
+  .res__head h2 {
+    margin-block: var(--space-sm) var(--space-md);
+  }
+
+  /* ---------- Dải tổng hợp ---------- */
+  .res__total {
+    padding: var(--space-lg);
+    margin-block-end: var(--space-lg);
+    border: 1px solid var(--a-gold-32);
+    border-radius: var(--radius-lg);
+    background:
+      linear-gradient(135deg, var(--a-gold-08), transparent 60%),
+      var(--color-surface-raised);
+  }
+
+  .res__total-label {
+    margin-block-end: var(--space-md);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+  }
+
+  .res__total-grid {
+    display: grid;
+    gap: var(--space-md);
+    margin: 0;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+  }
+
+  .res__total-grid dt {
+    font-size: var(--text-xs);
+    color: var(--color-fg-subtle);
+    margin-block-end: var(--space-3xs);
+  }
+
+  .res__total-grid dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 800;
+    letter-spacing: var(--tracking-snug);
+    /* Số dài như 543.264.771 ₫ dễ tràn ô trên màn hình hẹp */
+    overflow-wrap: anywhere;
+  }
+
+  .res__total-hl dd {
+    font-size: var(--text-2xl);
+    background: var(--grad-gold);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+
+  @supports not (background-clip: text) {
+    .res__total-hl dd {
+      color: var(--color-accent);
+      -webkit-text-fill-color: currentColor;
+    }
+  }
+
+  .res__unit {
+    /* Cần khoảng hở rõ ràng: "12,16 lần" chứ không phải "12,16lần".
+       0.15em quá hẹp vì chữ đơn vị đã nhỏ hơn số rất nhiều. */
+    margin-inline-start: 0.32em;
+    font-size: 0.55em;
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: lowercase;
+  }
+
+  /* ---------- Thẻ từng chiến dịch ---------- */
+  .res__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+    gap: var(--space-sm);
+    margin: 0 0 var(--space-lg);
+    padding: 0;
+  }
+
+  .rcard {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    transition:
+      border-color var(--dur-base) var(--ease-out),
+      transform var(--dur-base) var(--ease-out);
+  }
+
+  .rcard:hover {
+    border-color: var(--color-border-strong);
+    transform: translateY(-2px);
+  }
+
+  .rcard__num {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-fg-subtle);
+  }
+
+  .rcard__roi {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2xs);
+    margin-block: var(--space-2xs) var(--space-md);
+    padding-block-end: var(--space-md);
+    border-block-end: 1px solid var(--color-border);
+  }
+
+  .rcard__roi-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-fg-subtle);
+  }
+
+  .rcard__roi-value {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-accent);
+  }
+
+  .rcard__stats {
+    display: grid;
+    gap: var(--space-2xs);
+    margin: 0 0 var(--space-md);
+  }
+
+  .rcard__stats > div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-sm);
+  }
+
+  .rcard__stats dt {
+    font-size: var(--text-sm);
+    color: var(--color-fg-muted);
+    flex: none;
+  }
+
+  .rcard__stats dd {
+    margin: 0;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+  }
+
+  /* Doanh thu là con số bán được hàng — cho nó nổi hơn các dòng còn lại */
+  .rcard__revenue {
+    color: var(--color-positive);
+  }
+
+  .rcard__proof {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2xs);
+    inline-size: 100%;
+    /* 44px: vùng chạm tối thiểu */
+    min-block-size: 2.75rem;
+    margin-block-start: auto;
+    padding-inline: var(--space-sm);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-full);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-fg-muted);
+    transition:
+      border-color var(--dur-base) var(--ease-out),
+      color var(--dur-base) var(--ease-out),
+      background-color var(--dur-base) var(--ease-out);
+  }
+
+  .rcard__proof:hover {
+    border-color: var(--color-accent);
+    background: var(--a-gold-08);
+    color: var(--color-accent);
+  }
+
+  /* ---------- Ghi chú ---------- */
+  .res__note {
+    max-inline-size: 68ch;
+    font-size: var(--text-xs);
+    line-height: var(--leading-relaxed);
+    color: var(--color-fg-subtle);
+  }
+</style>
