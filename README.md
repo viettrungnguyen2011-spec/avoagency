@@ -138,25 +138,29 @@ Website này là **file tĩnh**, không có máy chủ chạy phía sau, nên fo
 gửi email được. Phải nối vào một dịch vụ trung gian. Cả hai dịch vụ dưới đây
 đều **miễn phí** ở mức dùng cơ bản.
 
-### Cách A — Web3Forms (khuyến nghị, không cần tạo tài khoản)
+### Đang dùng: Web3Forms — **đã cấu hình xong**
 
-1. Vào [web3forms.com](https://web3forms.com/)
-2. Nhập email nhận thông báo → bấm **Create Access Key**
-3. Kiểm tra hộp thư, bạn sẽ nhận được một chuỗi **Access Key**
-4. Mở file `src/components/ContactForm.astro`, tìm dòng có `form__trap` và thêm
-   ngay bên dưới nó:
+Form hiện đã nối vào Web3Forms. Email gửi về địa chỉ đã đăng ký Access Key.
 
-   ```html
-   <input type="hidden" name="access_key" value="ACCESS_KEY_CUA_BAN" />
-   ```
+Cấu hình nằm trong file `.env` ở thư mục gốc (file này **không** được đẩy lên
+GitHub):
 
-5. Tạo file `.env` ở thư mục gốc dự án với nội dung:
+```
+PUBLIC_FORM_ENDPOINT=https://api.web3forms.com/submit
+PUBLIC_WEB3FORMS_KEY=<access key của bạn>
+```
 
-   ```
-   PUBLIC_FORM_ENDPOINT=https://api.web3forms.com/submit
-   ```
+> **Vì sao để key trong `.env` mà không dán thẳng vào code?** Access Key của
+> Web3Forms bắt buộc phải nằm trong HTML thì form mới chạy, nên nó không phải bí
+> mật tuyệt đối. Nhưng để trong `.env` thì nó không bị đẩy lên repo GitHub công
+> khai, tránh bị máy quét tự động nhặt và spam.
 
-### Cách B — Formspree
+Nếu cần đổi key: sửa `.env` rồi chạy lại `npm run build`.
+
+**Chống spam có hai lớp:** một ô ẩn được kiểm ở phía trình duyệt trước khi gửi,
+và một ô `botcheck` do Web3Forms tự lọc ở phía máy chủ.
+
+### Phương án thay thế — Formspree
 
 1. Vào [formspree.io](https://formspree.io/), đăng ký và tạo một form mới
 2. Copy URL dạng `https://formspree.io/f/xxxxxxx`
@@ -322,7 +326,8 @@ avo-agency/
 ## 10. Checklist trước khi lên sóng
 
 - [x] ~~Đổi `PUBLIC_SITE_URL` trong `.env` thành domain thật~~ → `https://avo.com.vn`
-- [ ] Kết nối form và gửi thử một lần, xác nhận nhận được email
+- [x] ~~Kết nối form~~ → Web3Forms
+- [ ] Gửi thử form một lần, xác nhận email về tới hộp thư
 - [x] ~~Thay `facebookHref` trong `src/i18n/ui.ts` bằng link Facebook thật~~
 - [ ] Rà lại toàn bộ nội dung trong `src/i18n/ui.ts` — đặc biệt các chỗ trong `[ ]`
 - [ ] Bật SSL trên Hostinger **trước khi** upload

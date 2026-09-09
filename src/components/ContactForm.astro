@@ -11,6 +11,16 @@ const t = useTranslations(lang);
 // Trang này là static nên không có server xử lý form.
 // Endpoint được nhúng lúc build từ biến môi trường PUBLIC_FORM_ENDPOINT.
 const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
+
+// Access Key của Web3Forms. Key bắt buộc phải nằm trong HTML thì form mới chạy,
+// nhưng để trong .env (đã gitignore) thì nó không bị đẩy lên repo GitHub.
+const web3Key = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
+
+// Tiêu đề email nhận được, để phân biệt với thư rác trong hộp thư
+const mailSubject =
+  lang === 'vi'
+    ? 'Yêu cầu tư vấn mới từ website AVO AGENCY'
+    : 'New consultation request from the AVO AGENCY website';
 ---
 
 <section class="section contact" id="contact">
@@ -65,11 +75,19 @@ const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
 
     <div class="contact__panel" data-reveal-target data-reveal-delay="120">
       <form class="form" data-form data-endpoint={endpoint} novalidate>
-        <!-- Bẫy spam: bot điền hết mọi ô, người thật không thấy ô này -->
+        <!-- Bẫy spam lớp 1: bot điền hết mọi ô, người thật không thấy ô này.
+             Được kiểm ở phía trình duyệt trước khi gửi đi. -->
         <div class="form__trap" aria-hidden="true">
           <label for="company-website">Website</label>
           <input id="company-website" name="company_website" type="text" tabindex="-1" autocomplete="off" />
+          <!-- Bẫy spam lớp 2: ô này do Web3Forms tự lọc ở phía máy chủ -->
+          <input name="botcheck" type="checkbox" tabindex="-1" />
         </div>
+
+        <!-- Các trường Web3Forms đọc, người dùng không nhìn thấy -->
+        {web3Key && <input type="hidden" name="access_key" value={web3Key} />}
+        <input type="hidden" name="subject" value={mailSubject} />
+        <input type="hidden" name="from_name" value="AVO AGENCY Website" />
 
         <div class="form__row">
           <div class="field">
