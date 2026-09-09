@@ -14,6 +14,10 @@ import quayVideo from '../assets/gallery/quay-video-huong-dan.jpg';
 import lopK10 from '../assets/gallery/lop-tiktok-ads-k10-ha-noi.jpg';
 import namDinh from '../assets/gallery/dao-tao-nam-dinh.jpg';
 import sellerVanDon2 from '../assets/gallery/su-kien-seller-van-don-2.jpg';
+import chiaKhoaAds from '../assets/gallery/su-kien-chia-khoa-ads-tiktok.jpg';
+import thaoTacShop from '../assets/gallery/huong-dan-thao-tac-tiktok-shop.jpg';
+import lopK02 from '../assets/gallery/lop-tiktok-ads-k02-ha-noi.jpg';
+import thucHanhAds from '../assets/gallery/thuc-hanh-trinh-quan-ly-ads.jpg';
 
 interface Props {
   lang: Lang;
@@ -22,11 +26,12 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 const caps = t.gallery.captions;
 
-// Bố cục lưới 4 cột, 3 hàng, khít không chừa lỗ:
+// Bố cục lưới 4 cột, 4 hàng, khít không chừa lỗ:
 //   hàng 1-2: ô lớn 2x2 (ảnh hội trường) + 4 ô nhỏ ở cột 3-4
-//   hàng 3  : 4 ô đều nhau
-// Đúng 9 ảnh. Thêm hoặc bớt ảnh thì phải tính lại bố cục, nếu không lưới sẽ
-// thừa một ô trống ở hàng cuối.
+//   hàng 3-4: 8 ô đều nhau
+// Ô lớn chiếm 4 chỗ, 12 ảnh còn lại chiếm 12 chỗ -> vừa đúng 16 chỗ của lưới.
+// ĐÚNG 13 ẢNH. Thêm hoặc bớt phải tính lại: số ảnh hợp lệ tiếp theo là 17
+// (thêm trọn một hàng 4 ô), nếu không hàng cuối sẽ thừa chỗ trống.
 const items = [
   { slug: 'su-kien-tp-vinh-hoi-truong', img: hoiTruong, size: 'featured' },
   { slug: 'su-kien-crazy-tiktok', img: crazyTiktok, size: 'normal' },
@@ -37,6 +42,10 @@ const items = [
   { slug: 'lop-tiktok-ads-k10-ha-noi', img: lopK10, size: 'normal' },
   { slug: 'dao-tao-nam-dinh', img: namDinh, size: 'normal' },
   { slug: 'su-kien-seller-van-don-2', img: sellerVanDon2, size: 'normal' },
+  { slug: 'su-kien-chia-khoa-ads-tiktok', img: chiaKhoaAds, size: 'normal' },
+  { slug: 'huong-dan-thao-tac-tiktok-shop', img: thaoTacShop, size: 'normal' },
+  { slug: 'lop-tiktok-ads-k02-ha-noi', img: lopK02, size: 'normal' },
+  { slug: 'thuc-hanh-trinh-quan-ly-ads', img: thucHanhAds, size: 'normal' },
 ] as const;
 ---
 

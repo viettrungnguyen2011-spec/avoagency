@@ -81,6 +81,22 @@ export const contact = {
 Những chỗ đặt trong ngoặc vuông như `[Tên khách hàng]` là nội dung mẫu cần bạn
 thay bằng thông tin thật.
 
+### Ảnh chụp tin nhắn khách hàng
+
+Nằm ở `src/assets/tin-nhan/`, nội dung trích dẫn ở `src/i18n/ui.ts` mục `proof`.
+
+**Toàn bộ ảnh đã che dữ liệu cá nhân trước khi đưa vào dự án:** ảnh đại diện
+(pixel hoá), địa chỉ email, tên doanh nghiệp của khách, và tên nhân viên phía
+nền tảng. Nội dung tin nhắn giữ nguyên từng chữ.
+
+> **Thêm ảnh tin nhắn mới thì phải che trước.** Đừng copy thẳng ảnh chụp vào
+> `src/assets/`. Ảnh chat hầu như luôn chứa tên thật, ảnh mặt người, đôi khi cả
+> email và số điện thoại của người không hề đồng ý công khai.
+
+Lưới mục này tính cho **đúng 5 thẻ** (2 cột: 2+2+1 trải ngang; 3 cột: 3 + thẻ 4
+trải 2 cột + thẻ 5). Thêm hoặc bớt thẻ phải sửa lại các quy tắc trong
+`Proof.astro`, nếu không hàng cuối sẽ thừa chỗ trống.
+
 ### Số liệu kết quả chạy ads
 
 Nằm ở `src/i18n/results.ts`. Mỗi dòng tương ứng một ảnh chụp dashboard trong
@@ -358,7 +374,8 @@ avo-agency/
 │   │   ├── Process.astro    # 5 bước hợp tác
 │   │   ├── Audience.astro   # khách hàng + lời kết
 │   │   ├── Results.astro    # bảng kết quả chạy ads + dải tổng hợp
-│   │   ├── Gallery.astro    # thư viện ảnh năng lực
+│   │   ├── Proof.astro      # tin nhắn khách xác nhận đã xử lý xong
+│   │   ├── Gallery.astro    # thư viện ảnh năng lực (13 ảnh, lưới 4x4)
 │   │   ├── ContactForm.astro
 │   │   ├── Footer.astro
 │   │   ├── LegalDoc.astro   # khung hiển thị văn bản pháp lý + mục lục
@@ -366,7 +383,8 @@ avo-agency/
 │   │   └── Icon.astro       # bộ icon SVG dùng chung
 │   ├── assets/
 │   │   ├── gallery/         # ảnh sự kiện, đào tạo (đã xoá EXIF)
-│   │   └── results/         # ảnh chụp dashboard quảng cáo
+│   │   ├── results/         # ảnh chụp dashboard quảng cáo
+│   │   └── tin-nhan/        # ảnh chụp tin nhắn khách (đã che dữ liệu cá nhân)
 │   ├── i18n/
 │   │   ├── ui.ts            # >>> TOÀN BỘ CHỮ TRANG CHỦ NẰM Ở ĐÂY <<<
 │   │   ├── results.ts       # >>> SỐ LIỆU CHIẾN DỊCH ADS <<<

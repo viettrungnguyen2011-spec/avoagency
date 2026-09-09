@@ -235,6 +235,47 @@ export const ui = {
       captionTemplate: 'Chiến dịch ROI {roi} lần — chi phí {cost}, doanh thu {revenue}',
     },
 
+    proof: {
+      eyebrow: 'Khách xác nhận',
+      title: 'Xong việc, khách nhắn lại.',
+      lede: 'Tin nhắn thật từ khách hàng sau khi chúng tôi xử lý xong sự cố shop. Bấm vào từng thẻ để xem ảnh chụp màn hình gốc.',
+      viewLabel: 'Xem tin nhắn gốc',
+      items: [
+        {
+          slug: 'tin-nhan-3',
+          quote: 'Kháng nghị mình thành công và shop đã hoạt động lại rồi á anh, báo seller giúp em nha.',
+          author: 'Tim Nguyen',
+          case: 'Kháng nghị shop bị đình chỉ',
+        },
+        {
+          slug: 'tin-nhan-1',
+          quote: 'Shop ok rồi ạ. Em cảm ơn a.',
+          author: 'Bùi Diễm',
+          case: 'Mở lại shop bị khoá',
+        },
+        {
+          slug: 'tin-nhan-5',
+          quote: 'Có kết quả được duyệt pre-order rồi, áp dụng từ hôm nay 21/7.',
+          author: 'Xác nhận từ phía TikTok Shop',
+          case: 'Duyệt mở Pre-order cho shop',
+        },
+        {
+          slug: 'tin-nhan-4',
+          quote: 'Mail em ok rồi anh nhé. Em cảm ơn anh ạ.',
+          author: 'Khách hàng',
+          case: 'Bind lại email tài khoản',
+        },
+        {
+          slug: 'tin-nhan-2',
+          quote: 'Dạ. Mình cảm ơn ạ.',
+          author: 'Đồng Hiền',
+          case: 'Xác minh lại giấy tờ',
+        },
+      ],
+      disclaimer:
+        'Ảnh chụp giữ nguyên nội dung tin nhắn. Chỉ che ảnh đại diện, email, tên doanh nghiệp của khách và tên nhân viên phía nền tảng — những thông tin cá nhân mà họ không đồng ý công khai. Không chỉnh sửa một chữ nào trong nội dung.',
+    },
+
     gallery: {
       eyebrow: 'Năng lực thực tế',
       title: 'Chúng tôi đứng lớp, không chỉ chạy ads.',
@@ -246,6 +287,10 @@ export const ui = {
         'su-kien-crazy-tiktok': 'Sự kiện Crazy TikTok — xây dựng hệ thống bán hàng',
         'su-kien-seller-van-don': 'Sự kiện Seller Vạn Đơn',
         'su-kien-seller-van-don-2': 'Sự kiện Seller Vạn Đơn — trao đổi cùng khách mời',
+        'su-kien-chia-khoa-ads-tiktok': 'Sự kiện Chìa khoá Ads TikTok ngàn đơn',
+        'huong-dan-thao-tac-tiktok-shop': 'Hướng dẫn thao tác trực tiếp trên TikTok Shop',
+        'lop-tiktok-ads-k02-ha-noi': 'Lớp TikTok Ads K02 — đồng tổ chức cùng Dalali Academy',
+        'thuc-hanh-trinh-quan-ly-ads': 'Thực hành trên Trình quản lý quảng cáo TikTok',
         'lam-viec-cung-doi-tac': 'Làm việc cùng đối tác tại sự kiện',
         'quay-video-huong-dan': 'Quay video hướng dẫn học viên',
         'lop-tiktok-ads-k10-ha-noi': 'Lớp đào tạo TikTok Ads K10 — Hà Nội',
@@ -573,6 +618,47 @@ export const ui = {
       captionTemplate: 'Campaign at {roi}x ROI — {cost} spend, {revenue} revenue',
     },
 
+    proof: {
+      eyebrow: 'Client confirmations',
+      title: 'Job done, clients wrote back.',
+      lede: 'Real messages from clients after we resolved their shop problems. Click any card to see the original screenshot.',
+      viewLabel: 'View original message',
+      items: [
+        {
+          slug: 'tin-nhan-3',
+          quote: 'The appeal went through and the shop is running again — please let the seller know.',
+          author: 'Tim Nguyen',
+          case: 'Appeal against shop suspension',
+        },
+        {
+          slug: 'tin-nhan-1',
+          quote: 'The shop is fine now. Thank you.',
+          author: 'Bui Diem',
+          case: 'Locked shop reopened',
+        },
+        {
+          slug: 'tin-nhan-5',
+          quote: 'The pre-order approval came through — effective from today, 21 July.',
+          author: 'Confirmation from TikTok Shop',
+          case: 'Pre-order enabled for the shop',
+        },
+        {
+          slug: 'tin-nhan-4',
+          quote: 'My email works now. Thank you so much.',
+          author: 'Client',
+          case: 'Account email re-bound',
+        },
+        {
+          slug: 'tin-nhan-2',
+          quote: 'Yes. Thank you.',
+          author: 'Dong Hien',
+          case: 'Document re-verification',
+        },
+      ],
+      disclaimer:
+        'Screenshots keep the message content intact. Only profile photos, email addresses, the client business name and platform staff names are masked — personal details those people did not agree to publish. No wording has been altered. Quotes above are translated from Vietnamese; the screenshots show the Vietnamese originals.',
+    },
+
     gallery: {
       eyebrow: 'Track record',
       title: 'We teach this, not just run it.',
@@ -584,6 +670,10 @@ export const ui = {
         'su-kien-crazy-tiktok': 'Crazy TikTok — building a selling system',
         'su-kien-seller-van-don': 'Seller Van Don event',
         'su-kien-seller-van-don-2': 'Seller Van Don — with an invited guest',
+        'su-kien-chia-khoa-ads-tiktok': 'The TikTok Ads Playbook event',
+        'huong-dan-thao-tac-tiktok-shop': 'Walking through TikTok Shop live on screen',
+        'lop-tiktok-ads-k02-ha-noi': 'TikTok Ads course K02 — co-hosted with Dalali Academy',
+        'thuc-hanh-trinh-quan-ly-ads': 'Hands-on in TikTok Ads Manager',
         'lam-viec-cung-doi-tac': 'Working with partners at an event',
         'quay-video-huong-dan': 'Filming a tutorial for trainees',
         'lop-tiktok-ads-k10-ha-noi': 'TikTok Ads course K10 — Hanoi',

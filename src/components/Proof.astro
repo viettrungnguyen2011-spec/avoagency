@@ -1,0 +1,229 @@
+---
+import Icon from './Icon.astro';
+import { useTranslations, type Lang } from '../i18n/ui';
+
+// Ảnh chụp tin nhắn chỉ mở trong hộp xem ảnh lớn, không hiện thu nhỏ trên thẻ.
+// Cùng lý do với mục kết quả ads: ảnh chụp điện thoại rất cao và hẹp, nhét vào
+// lưới thì hoặc bị cắt cụt hoặc kéo trang dài ra vô ích. Lời khách nói mới là
+// nội dung; ảnh giữ vai trò bằng chứng khi bấm vào.
+//
+// Toàn bộ ảnh đã che ảnh đại diện, email và tên doanh nghiệp trước khi đưa vào
+// dự án — xem scripts trong lịch sử git nếu cần dựng lại.
+import tn1 from '../assets/tin-nhan/tin-nhan-1.jpg';
+import tn2 from '../assets/tin-nhan/tin-nhan-2.jpg';
+import tn3 from '../assets/tin-nhan/tin-nhan-3.jpg';
+import tn4 from '../assets/tin-nhan/tin-nhan-4.jpg';
+import tn5 from '../assets/tin-nhan/tin-nhan-5.jpg';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const shots: Record<string, ImageMetadata> = {
+  'tin-nhan-1': tn1,
+  'tin-nhan-2': tn2,
+  'tin-nhan-3': tn3,
+  'tin-nhan-4': tn4,
+  'tin-nhan-5': tn5,
+};
+---
+
+<section class="section proof" id="proof">
+  <div class="shell">
+    <header class="proof__head">
+      <p class="eyebrow" data-reveal-target>{t.proof.eyebrow}</p>
+      <h2 data-reveal-target data-reveal-delay="60">{t.proof.title}</h2>
+      <p class="lede" data-reveal-target data-reveal-delay="120">{t.proof.lede}</p>
+    </header>
+
+    <ul class="proof__grid" role="list">
+      {
+        t.proof.items.map((item) => (
+          <li class="pf" data-reveal-target>
+            <span class="pf__mark" aria-hidden="true">&ldquo;</span>
+
+            <blockquote class="pf__quote">
+              <p>{item.quote}</p>
+            </blockquote>
+
+            <div class="pf__meta">
+              <p class="pf__author">{item.author}</p>
+              <p class="pf__case">
+                <Icon name="check" size={14} />
+                <span>{item.case}</span>
+              </p>
+            </div>
+
+            <button
+              class="pf__view"
+              type="button"
+              data-lightbox
+              data-full={shots[item.slug].src}
+              data-caption={`${item.case} — ${item.author}`}
+            >
+              <Icon name="chat" size={16} />
+              <span>{t.proof.viewLabel}</span>
+            </button>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="proof__note" data-reveal-target>{t.proof.disclaimer}</p>
+  </div>
+</section>
+
+<style>
+  .proof {
+    background: var(--color-bg);
+  }
+
+  .proof__head {
+    max-inline-size: 46rem;
+    margin-block-end: var(--space-xl);
+  }
+
+  .proof__head h2 {
+    margin-block: var(--space-sm) var(--space-md);
+  }
+
+  /* Có ĐÚNG 5 thẻ. Số lẻ nên phải cho một thẻ trải rộng ở mỗi khổ màn hình,
+     nếu không hàng cuối sẽ thừa chỗ và thẻ chót đứng lẻ loi.
+       2 cột: 2 + 2 + 1(trải ngang)
+       3 cột: 3 + [thẻ 4 trải 2 cột] + thẻ 5
+     Thêm hoặc bớt thẻ thì phải tính lại các quy tắc này. */
+  .proof__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+    margin: 0 0 var(--space-lg);
+    padding: 0;
+  }
+
+  @media (min-width: 40rem) and (max-width: 63.9375rem) {
+    .proof__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .pf:last-child {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .proof__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .pf:nth-child(4) {
+      grid-column: span 2;
+    }
+  }
+
+  .pf {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-lg) var(--space-md) var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    overflow: hidden;
+    transition:
+      border-color var(--dur-base) var(--ease-out),
+      transform var(--dur-base) var(--ease-out);
+  }
+
+  .pf:hover {
+    border-color: var(--a-gold-32);
+    transform: translateY(-2px);
+  }
+
+  /* Dấu ngoặc kép cỡ lớn làm nền trang trí, không đọc bởi trình đọc màn hình */
+  .pf__mark {
+    position: absolute;
+    inset-block-start: -0.35em;
+    inset-inline-end: 0.15em;
+    font-family: var(--font-display);
+    font-size: 7rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--a-gold-08);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .pf__quote {
+    margin: 0 0 var(--space-md);
+  }
+
+  .pf__quote p {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    line-height: var(--leading-snug);
+    letter-spacing: var(--tracking-snug);
+    text-wrap: pretty;
+    color: var(--color-fg);
+  }
+
+  .pf__meta {
+    margin-block-end: var(--space-md);
+    padding-block-start: var(--space-sm);
+    border-block-start: 1px solid var(--color-border);
+  }
+
+  .pf__author {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-fg);
+  }
+
+  .pf__case {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    margin-block-start: var(--space-3xs);
+    font-size: var(--text-xs);
+    color: var(--color-fg-muted);
+  }
+
+  .pf__case :global(svg) {
+    flex: none;
+    color: var(--color-positive);
+  }
+
+  .pf__view {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2xs);
+    inline-size: 100%;
+    /* 44px: vùng chạm tối thiểu */
+    min-block-size: 2.75rem;
+    margin-block-start: auto;
+    padding-inline: var(--space-sm);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-full);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-fg-muted);
+    transition:
+      border-color var(--dur-base) var(--ease-out),
+      color var(--dur-base) var(--ease-out),
+      background-color var(--dur-base) var(--ease-out);
+  }
+
+  .pf__view:hover {
+    border-color: var(--color-accent);
+    background: var(--a-gold-08);
+    color: var(--color-accent);
+  }
+
+  .proof__note {
+    max-inline-size: 68ch;
+    font-size: var(--text-xs);
+    line-height: var(--leading-relaxed);
+    color: var(--color-fg-subtle);
+  }
+</style>
