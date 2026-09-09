@@ -160,6 +160,41 @@ Nếu cần đổi key: sửa `.env` rồi chạy lại `npm run build`.
 **Chống spam có hai lớp:** một ô ẩn được kiểm ở phía trình duyệt trước khi gửi,
 và một ô `botcheck` do Web3Forms tự lọc ở phía máy chủ.
 
+### Lead về hộp thư nào?
+
+**`cmo.avo@gmail.com`** — không phải `ceo@avo.com.vn`.
+
+Web3Forms gói miễn phí gửi thư về **email đã dùng để tạo Access Key**, chứ không
+gửi tới địa chỉ khách điền trong ô "Email" của form. Ô đó chỉ là địa chỉ người
+gửi, dùng để bạn bấm Reply trả lời khách.
+
+Muốn đổi hộp thư nhận: tạo Access Key mới ở web3forms.com bằng email khác, rồi
+thay `PUBLIC_WEB3FORMS_KEY` trong `.env` và chạy lại `npm run build`.
+
+### Vì sao không dùng email @avo.com.vn?
+
+Đã thử và thất bại. Access Key đầu tiên đăng ký bằng `ceo@avo.com.vn` (hộp thư
+đặt tại Mắt Bão). Web3Forms xác nhận gửi thành công (`success: true`) nhưng thư
+**không tới Inbox lẫn Spam** — bị chặn ngay ở tầng máy chủ.
+
+Đây là chuyện thường gặp: các nhà cung cấp mail Việt Nam lọc rất gắt thư giao
+dịch gửi từ dịch vụ nước ngoài. Đổi sang Gmail là xong.
+
+> **Nên làm ngay trong Gmail:** tạo một bộ lọc cho thư có tiêu đề
+> "Yêu cầu tư vấn mới từ website AVO AGENCY", đặt nhãn riêng và tick
+> **"Never send it to Spam"**. Không làm bước này thì vài tháng nữa Gmail có thể
+> tự động đẩy lead vào Spam mà bạn không biết.
+
+### Nếu sau này muốn lead về thẳng @avo.com.vn
+
+Phải chuyển sang dịch vụ gửi thư bằng chính domain của mình — Resend hoặc
+SendGrid — và cấu hình bản ghi SPF, DKIM cho `avo.com.vn`. Khi thư đi từ chính
+domain của bạn thì Mắt Bão không có lý do gì chặn. Cách này tốn công thiết lập
+DNS nhưng đúng đắn về lâu dài.
+
+Đừng xin Mắt Bão whitelist IP của Web3Forms: dịch vụ này gửi từ nhiều IP và có
+thể đổi bất cứ lúc nào, whitelist hôm nay mai lại hỏng.
+
 ### Phương án thay thế — Formspree
 
 1. Vào [formspree.io](https://formspree.io/), đăng ký và tạo một form mới
@@ -327,7 +362,8 @@ avo-agency/
 
 - [x] ~~Đổi `PUBLIC_SITE_URL` trong `.env` thành domain thật~~ → `https://avo.com.vn`
 - [x] ~~Kết nối form~~ → Web3Forms
-- [ ] Gửi thử form một lần, xác nhận email về tới hộp thư
+- [x] ~~Gửi thử form~~ → Web3Forms xác nhận gửi thành công, lead về `cmo.avo@gmail.com`
+- [ ] Tạo bộ lọc Gmail cho thư lead, tick "Never send it to Spam"
 - [x] ~~Thay `facebookHref` trong `src/i18n/ui.ts` bằng link Facebook thật~~
 - [ ] Rà lại toàn bộ nội dung trong `src/i18n/ui.ts` — đặc biệt các chỗ trong `[ ]`
 - [ ] Bật SSL trên Hostinger **trước khi** upload
